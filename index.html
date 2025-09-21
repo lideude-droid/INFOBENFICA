@@ -347,14 +347,101 @@
             background-clip: text;
         }
 
+        /* Instagram Feed Container */
+        .instagram-feed-container {
+            background: var(--bg-card);
+            border-radius: 30px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px var(--shadow-xl);
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .instagram-feed-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #833AB4, #FD1D1D, #FCB045);
+        }
+
+        .feed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .feed-profile {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .profile-avatar {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #833AB4, #FD1D1D, #FCB045);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 8px 30px rgba(131, 58, 180, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .profile-info h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-info p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .follow-btn {
+            background: linear-gradient(135deg, #833AB4, #FD1D1D);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(131, 58, 180, 0.3);
+        }
+
+        .follow-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(131, 58, 180, 0.4);
+        }
+
         .posts-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 3rem;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 3rem;
         }
 
         .post-card {
-            background: var(--bg-card);
+            background: var(--bg-primary);
             border-radius: 25px;
             overflow: hidden;
             box-shadow: 0 15px 40px var(--shadow-lg);
@@ -389,6 +476,23 @@
             font-size: 4rem;
             position: relative;
             overflow: hidden;
+        }
+
+        .post-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.1) 75%);
+            background-size: 20px 20px;
+            animation: shimmer 3s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 0 0; }
+            100% { background-position: 40px 40px; }
         }
 
         .post-content {
@@ -429,6 +533,35 @@
             border-radius: 15px;
             font-size: 0.85rem;
             font-weight: 600;
+        }
+
+        .view-more {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 2px solid var(--border);
+        }
+
+        .view-more-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            padding: 1.5rem 3rem;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            border: 2px solid var(--border);
+        }
+
+        .view-more-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(220, 20, 60, 0.3);
         }
 
         /* Empty State */
@@ -713,6 +846,82 @@
                 padding: 0.6rem;
                 font-size: 1rem;
             }
+
+            .instagram-feed-container {
+                padding: 2rem 1.5rem;
+                border-radius: 20px;
+            }
+
+            .feed-header {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+
+            .profile-avatar {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+
+            .profile-info h3 {
+                font-size: 1.5rem;
+            }
+
+            .follow-btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 0.95rem;
+            }
+
+            .post-content {
+                padding: 2rem;
+            }
+
+            .post-title {
+                font-size: 1.4rem;
+            }
+
+            .view-more-btn {
+                padding: 1.2rem 2rem;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: 4rem 1.5rem;
+                margin: 2rem 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .instagram-link {
+                padding: 1.2rem 2rem;
+                font-size: 1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .posts-grid {
+                gap: 1.5rem;
+            }
+
+            .post-image {
+                height: 200px;
+                font-size: 3rem;
+            }
+
+            .post-content {
+                padding: 1.5rem;
+            }
         }
 
         .hidden {
@@ -778,16 +987,14 @@
             </section>
 
             <section class="posts-container">
-                <h2 class="section-title">Últimas do Instagram</h2>
-  
-                <!-- LightWidget WIDGET -->
-                <script src="https://cdn.lightwidget.com/widgets/lightwidget.js"></script>
-                <iframe src="https//lightwidget.com/widgets/64d79c64fb6a57bfb53b900ea6b1ef5c.html" 
-                    scrolling="no" 
-                    allowtransparency="true" 
-                    class="lightwidget-widget" 
-                    style="width:100%;border:0;overflow:hidden;">
-                </iframe>
+                <h2 class="section-title" data-translate="latest-posts">Últimas do Instagram</h2>
+                <div class="posts-grid" id="posts-grid">
+                    <div class="empty-state">
+                        <i class="fab fa-instagram"></i>
+                        <h3 data-translate="no-posts">Sem posts ainda</h3>
+                        <p data-translate="add-posts-staff">Use a área Staff para adicionar publicações do Instagram</p>
+                    </div>
+                </div>
             </section>
         </div>
 
@@ -914,8 +1121,36 @@
             password: 'Benfica2025!@'
         };
 
-        // Posts array - starts empty (no default posts)
-        let posts = [];
+        // Posts array - com alguns posts de exemplo para demonstração
+        let posts = [
+            {
+                id: 1,
+                title: "Benfica vence e lidera o campeonato! 🏆",
+                content: "Grande vitória da nossa águia! A equipa mostrou garra e determinação em mais um jogo brilhante. Força Benfica! 🦅❤️",
+                emoji: "⚽",
+                date: "2025-09-20",
+                timestamp: "2025-09-20T18:30:00Z",
+                source: "Instagram"
+            },
+            {
+                id: 2,
+                title: "Novo reforço chegou ao Seixal! 💪",
+                content: "O clube oficializou a contratação de mais um grande jogador. Bem-vindo à família encarnada! #CarregaBenfica",
+                emoji: "🔴",
+                date: "2025-09-19",
+                timestamp: "2025-09-19T15:45:00Z",
+                source: "Instagram"
+            },
+            {
+                id: 3,
+                title: "Treino intenso no Seixal 🏃‍♂️",
+                content: "A equipa trabalha duro para o próximo desafio. O plantel está focado e determinado a conquistar mais uma vitória!",
+                emoji: "💪",
+                date: "2025-09-18",
+                timestamp: "2025-09-18T10:15:00Z",
+                source: "Instagram"
+            }
+        ];
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
@@ -934,6 +1169,9 @@
 
             // Auto-refresh Instagram simulation
             setInterval(checkForNewPosts, 60000); // Check every minute
+            
+            // Iniciar sistema Instagram
+            startInstagramAutoRefresh();
         });
 
         // Theme toggle with enhanced animation
@@ -1075,7 +1313,16 @@
             
             posts.slice().reverse().forEach((post, index) => {
                 const postCard = createPostCard(post, index);
+                postCard.style.opacity = '0';
+                postCard.style.transform = 'translateY(20px)';
                 postsGrid.appendChild(postCard);
+                
+                // Animate in with staggered delay
+                setTimeout(() => {
+                    postCard.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                    postCard.style.opacity = '1';
+                    postCard.style.transform = 'translateY(0)';
+                }, index * 150);
             });
         }
 
@@ -1224,13 +1471,122 @@
             }, 3000);
         }
 
-        // Simulate checking for new Instagram posts
-        function checkForNewPosts() {
-            // In a real implementation, this would connect to Instagram API
-            console.log('🔍 Verificando novos posts do Instagram...');
+        // ====================================
+        // INSTAGRAM API INTEGRATION
+        // ====================================
+        
+        const INSTAGRAM_CONFIG = {
+            accessToken: '', // COLOCA O TEU ACCESS TOKEN AQUI
+            apiUrl: 'https://graph.instagram.com/me/media'
+        };
+
+        // Função principal para buscar posts do Instagram
+        async function fetchInstagramPosts() {
+            if (!INSTAGRAM_CONFIG.accessToken) {
+                console.log('ℹ️ Access Token não configurado. Usando modo manual.');
+                return [];
+            }
+
+            try {
+                showNotification('🔄 Carregando posts do Instagram...', 'info');
+                
+                const response = await fetch(
+                    `${INSTAGRAM_CONFIG.apiUrl}?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&access_token=${INSTAGRAM_CONFIG.accessToken}`
+                );
+                
+                if (!response.ok) {
+                    throw new Error(`Erro HTTP: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error.message);
+                }
+                
+                return data.data || [];
+                
+            } catch (error) {
+                console.error('❌ Erro Instagram API:', error);
+                showNotification(`Erro ao carregar Instagram: ${error.message}`, 'error');
+                return [];
+            }
+        }
+
+        // Processar posts do Instagram
+        function processInstagramPosts(instagramPosts) {
+            return instagramPosts.map(post => ({
+                id: `ig_${post.id}`,
+                title: extractInstagramTitle(post.caption),
+                content: post.caption || 'Nova publicação no Instagram',
+                emoji: getEmojiByMediaType(post.media_type),
+                date: new Date(post.timestamp).toISOString().split('T')[0],
+                timestamp: post.timestamp,
+                mediaUrl: post.media_url || post.thumbnail_url,
+                permalink: post.permalink,
+                source: 'Instagram',
+                mediaType: post.media_type
+            }));
+        }
+
+        // Extrair título do caption do Instagram
+        function extractInstagramTitle(caption) {
+            if (!caption) return 'Post do Instagram';
             
-            // You could add actual Instagram API integration here
-            // For now, this is just a placeholder for the functionality
+            // Remover hashtags e mentions para o título
+            let title = caption
+                .replace(/#\w+/g, '')
+                .replace(/@\w+/g, '')
+                .split('\n')[0]
+                .trim();
+            
+            return title.length > 60 ? title.substring(0, 60) + '...' : title;
+        }
+
+        // Emoji baseado no tipo de media
+        function getEmojiByMediaType(mediaType) {
+            const emojiMap = {
+                'IMAGE': '📸',
+                'VIDEO': '🎥',
+                'CAROUSEL_ALBUM': '📱'
+            };
+            return emojiMap[mediaType] || '⚽';
+        }
+
+        // Carregar posts automaticamente do Instagram
+        async function loadInstagramPostsAuto() {
+            const instagramPosts = await fetchInstagramPosts();
+            
+            if (instagramPosts.length > 0) {
+                // Substituir posts manuais pelos do Instagram
+                posts = processInstagramPosts(instagramPosts);
+                loadPosts();
+                
+                // Atualizar também na área staff
+                if (isStaffLoggedIn) {
+                    loadStaffPosts();
+                }
+                
+                showNotification(`✅ ${posts.length} posts carregados do Instagram!`, 'success');
+            }
+        }
+
+        // Auto-refresh inteligente
+        function startInstagramAutoRefresh() {
+            // Refresh inicial
+            setTimeout(loadInstagramPostsAuto, 2000);
+            
+            // Refresh periódico (a cada 10 minutos)
+            setInterval(() => {
+                console.log('🔄 Auto-refresh Instagram...');
+                loadInstagramPostsAuto();
+            }, 10 * 60 * 1000);
+        }
+
+        // Atualizar função de verificação
+        function checkForNewPosts() {
+            console.log('🔍 Verificando novos posts do Instagram...');
+            loadInstagramPostsAuto();
         }
 
         // Enter key support for login
