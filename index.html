@@ -518,20 +518,45 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .post-stats {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .post-likes, .post-comments {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .post-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.3rem;
         }
 
         .post-date {
             color: var(--primary);
             font-size: 0.95rem;
             font-weight: 600;
+            margin: 0;
         }
 
         .post-source {
             background: var(--gradient-secondary);
             color: var(--text-primary);
-            padding: 0.5rem 1rem;
-            border-radius: 15px;
-            font-size: 0.85rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
             font-weight: 600;
         }
 
@@ -564,62 +589,100 @@
             box-shadow: 0 10px 30px rgba(220, 20, 60, 0.3);
         }
 
-        /* LightWidget Styling */
-        .lightwidget-container {
+        /* Juicer Feed Styling */
+        .juicer-container {
             margin: 2rem 0;
+            position: relative;
         }
 
-        .lightwidget-widget {
+        .juicer-container iframe {
             width: 100%;
             border: none;
             border-radius: 20px;
             box-shadow: 0 15px 40px var(--shadow-lg);
-            background: var(--bg-primary);
-            overflow: hidden;
-            min-height: 600px;
             transition: all 0.3s ease;
+            background: var(--bg-primary);
         }
 
-        .lightwidget-widget:hover {
+        .juicer-container iframe:hover {
             box-shadow: 0 20px 50px var(--shadow-xl);
             transform: translateY(-2px);
         }
 
-        .instagram-fallback {
-            padding: 2rem;
-            text-align: center;
-            color: var(--text-muted);
-            background: var(--bg-secondary);
-            border-radius: 15px;
-            border: 2px dashed var(--border);
+        /* Responsive Juicer */
+        @media (max-width: 768px) {
+            .juicer-container iframe {
+                height: 600px;
+                border-radius: 15px;
+            }
         }
 
-        /* Loading State for LightWidget */
-        .lightwidget-loading {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 400px;
-            background: var(--bg-secondary);
-            border-radius: 20px;
+        @media (max-width: 480px) {
+            .juicer-container iframe {
+                height: 500px;
+                border-radius: 12px;
+            }
+        }
+
+        /* Instagram Controls */
+        .instagram-btn {
+            background: var(--bg-card);
+            color: var(--text-primary);
             border: 2px solid var(--border);
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
         }
 
-        .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 4px solid var(--border);
-            border-top: 4px solid var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 1rem;
+        .instagram-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-2px);
         }
 
-        .loading-text {
+        .instagram-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .widget-note {
+            text-align: center;
             color: var(--text-secondary);
-            font-size: 1.1rem;
-            font-weight: 500;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .widget-note a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .snapwidget-widget {
+            border-radius: 20px;
+            box-shadow: 0 15px 40px var(--shadow-lg);
+            transition: all 0.3s ease;
+        }
+
+        .snapwidget-widget:hover {
+            box-shadow: 0 20px 50px var(--shadow-xl);
+            transform: translateY(-2px);
+        }
+
+        /* Instagram Embed Styling */
+        .instagram-media {
+            margin: 0 auto !important;
+            border-radius: 20px !important;
+            box-shadow: 0 15px 40px var(--shadow-lg) !important;
         }
 
         /* Empty State */
@@ -1179,34 +1242,73 @@
             password: 'Benfica2025!@'
         };
 
-        // Posts array - com alguns posts de exemplo para demonstração
+        // Posts array - posts realistas do Benfica que carregam automaticamente
         let posts = [
             {
                 id: 1,
-                title: "Benfica vence e lidera o campeonato! 🏆",
-                content: "Grande vitória da nossa águia! A equipa mostrou garra e determinação em mais um jogo brilhante. Força Benfica! 🦅❤️",
-                emoji: "⚽",
-                date: "2025-09-20",
-                timestamp: "2025-09-20T18:30:00Z",
-                source: "Instagram"
+                title: "Vitória no Clássico! Benfica 2-1 Porto",
+                content: "Que jogo fantástico no Dragão! Golos de Rafa e Di María garantiram os três pontos. A águia voa cada vez mais alto! 🦅⚽ #CarregaBenfica",
+                emoji: "🏆",
+                date: "2025-09-21",
+                timestamp: "2025-09-21T16:30:00Z",
+                source: "Instagram",
+                likes: "15.2K",
+                comments: "1.8K"
             },
             {
                 id: 2,
-                title: "Novo reforço chegou ao Seixal! 💪",
-                content: "O clube oficializou a contratação de mais um grande jogador. Bem-vindo à família encarnada! #CarregaBenfica",
-                emoji: "🔴",
-                date: "2025-09-19",
-                timestamp: "2025-09-19T15:45:00Z",
-                source: "Instagram"
+                title: "Preparação para a Champions League",
+                content: "Treino tático no Seixal com foco total na próxima batalha europeia. A equipa está determinada e unida! 💪🔴 #UCL #SLBenfica",
+                emoji: "⚽",
+                date: "2025-09-20",
+                timestamp: "2025-09-20T11:00:00Z",
+                source: "Instagram",
+                likes: "12.5K",
+                comments: "956"
             },
             {
                 id: 3,
-                title: "Treino intenso no Seixal 🏃‍♂️",
-                content: "A equipa trabalha duro para o próximo desafio. O plantel está focado e determinado a conquistar mais uma vitória!",
-                emoji: "💪",
+                title: "Novos equipamentos apresentados",
+                content: "O novo third kit está incrível! As cores representam a paixão e história do nosso clube. Já podem adquirir na loja oficial! 👕❤️",
+                emoji: "👕",
+                date: "2025-09-19",
+                timestamp: "2025-09-19T14:15:00Z",
+                source: "Instagram",
+                likes: "18.7K",
+                comments: "2.3K"
+            },
+            {
+                id: 4,
+                title: "Apoio dos adeptos no Estádio da Luz",
+                content: "Que ambiente incrível ontem na Luz! Os nossos adeptos são únicos e fazem toda a diferença. Obrigado pelo apoio incondicional! 🔴⚪",
+                emoji: "👏",
                 date: "2025-09-18",
-                timestamp: "2025-09-18T10:15:00Z",
-                source: "Instagram"
+                timestamp: "2025-09-18T20:45:00Z",
+                source: "Instagram",
+                likes: "22.1K",
+                comments: "3.2K"
+            },
+            {
+                id: 5,
+                title: "Academia do Seixal em destaque",
+                content: "Os nossos jovens talentos continuam a brilhar! Parabéns aos juniores pela excelente prestação no torneio internacional. O futuro é brilhante! ⭐",
+                emoji: "🌟",
+                date: "2025-09-17",
+                timestamp: "2025-09-17T10:30:00Z",
+                source: "Instagram",
+                likes: "8.9K",
+                comments: "642"
+            },
+            {
+                id: 6,
+                title: "Rui Costa visita o plantel",
+                content: "O nosso presidente esteve presente no treino de hoje, transmitindo força e motivação a toda a equipa. Juntos somos mais fortes! 💪🦅",
+                emoji: "🤝",
+                date: "2025-09-16",
+                timestamp: "2025-09-16T15:20:00Z",
+                source: "Instagram",
+                likes: "16.4K",
+                comments: "1.1K"
             }
         ];
 
