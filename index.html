@@ -1109,13 +1109,16 @@
 
             <section class="posts-container">
                 <h2 class="section-title" data-translate="latest-posts">Últimas do Instagram</h2>
-                <div class="posts-grid" id="posts-grid">
-                    <div class="empty-state">
-                        <i class="fab fa-instagram"></i>
-                        <h3 data-translate="no-posts">Sem posts ainda</h3>
-                        <p data-translate="add-posts-staff">Use a área Staff para adicionar publicações do Instagram</p>
-                    </div>
-                </div>
+                <section class="posts-container">
+  
+                    <iframe src="https://www.juicer.io/api/feeds/info_-benfica/iframe"          
+                        frameborder="0"
+                        width="1000" 
+                        height="1000"
+                        style="display:block;margin:0 auto;">
+                    </iframe>
+                </section>
+
             </section>
         </div>
 
@@ -1242,75 +1245,7 @@
             password: 'Benfica2025!@'
         };
 
-        // Posts array - posts realistas do Benfica que carregam automaticamente
-        let posts = [
-            {
-                id: 1,
-                title: "Vitória no Clássico! Benfica 2-1 Porto",
-                content: "Que jogo fantástico no Dragão! Golos de Rafa e Di María garantiram os três pontos. A águia voa cada vez mais alto! 🦅⚽ #CarregaBenfica",
-                emoji: "🏆",
-                date: "2025-09-21",
-                timestamp: "2025-09-21T16:30:00Z",
-                source: "Instagram",
-                likes: "15.2K",
-                comments: "1.8K"
-            },
-            {
-                id: 2,
-                title: "Preparação para a Champions League",
-                content: "Treino tático no Seixal com foco total na próxima batalha europeia. A equipa está determinada e unida! 💪🔴 #UCL #SLBenfica",
-                emoji: "⚽",
-                date: "2025-09-20",
-                timestamp: "2025-09-20T11:00:00Z",
-                source: "Instagram",
-                likes: "12.5K",
-                comments: "956"
-            },
-            {
-                id: 3,
-                title: "Novos equipamentos apresentados",
-                content: "O novo third kit está incrível! As cores representam a paixão e história do nosso clube. Já podem adquirir na loja oficial! 👕❤️",
-                emoji: "👕",
-                date: "2025-09-19",
-                timestamp: "2025-09-19T14:15:00Z",
-                source: "Instagram",
-                likes: "18.7K",
-                comments: "2.3K"
-            },
-            {
-                id: 4,
-                title: "Apoio dos adeptos no Estádio da Luz",
-                content: "Que ambiente incrível ontem na Luz! Os nossos adeptos são únicos e fazem toda a diferença. Obrigado pelo apoio incondicional! 🔴⚪",
-                emoji: "👏",
-                date: "2025-09-18",
-                timestamp: "2025-09-18T20:45:00Z",
-                source: "Instagram",
-                likes: "22.1K",
-                comments: "3.2K"
-            },
-            {
-                id: 5,
-                title: "Academia do Seixal em destaque",
-                content: "Os nossos jovens talentos continuam a brilhar! Parabéns aos juniores pela excelente prestação no torneio internacional. O futuro é brilhante! ⭐",
-                emoji: "🌟",
-                date: "2025-09-17",
-                timestamp: "2025-09-17T10:30:00Z",
-                source: "Instagram",
-                likes: "8.9K",
-                comments: "642"
-            },
-            {
-                id: 6,
-                title: "Rui Costa visita o plantel",
-                content: "O nosso presidente esteve presente no treino de hoje, transmitindo força e motivação a toda a equipa. Juntos somos mais fortes! 💪🦅",
-                emoji: "🤝",
-                date: "2025-09-16",
-                timestamp: "2025-09-16T15:20:00Z",
-                source: "Instagram",
-                likes: "16.4K",
-                comments: "1.1K"
-            }
-        ];
+        
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
