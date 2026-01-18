@@ -1,9 +1,12 @@
-
+<!DOCTYPE html>
+<html lang="pt">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Info Benfica - O Teu Cantinho Benfiquista</title>
     <link rel="icon" type="image/x-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTYiIGZpbGw9IiNEQzE0M0MiLz4KPHN2ZyB4PSI4IiB5PSI4IiB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiI+CjxwYXRoIGQ9Ik04IDJMMTAgNkgxNEw4IDE0TDIgNkg2TDggMloiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo8L3N2Zz4K">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
 
@@ -46,7 +49,6 @@
             overflow-x: hidden;
         }
 
-        /* Animated Benfica Background */
         .benfica-bg {
             position: fixed;
             top: 0;
@@ -57,8 +59,7 @@
             opacity: 0.04;
             background: 
                 radial-gradient(circle at 20% 20%, var(--benfica-red) 0%, transparent 30%),
-                radial-gradient(circle at 80% 80%, var(--benfica-gold) 0%, transparent 30%),
-                radial-gradient(circle at 50% 50%, var(--benfica-red) 0%, transparent 40%);
+                radial-gradient(circle at 80% 80%, var(--benfica-gold) 0%, transparent 30%);
             animation: benficaPulse 15s ease-in-out infinite;
         }
 
@@ -67,26 +68,6 @@
             50% { opacity: 0.08; transform: scale(1.1); }
         }
 
-        /* Eagle Pattern Background */
-        .eagle-pattern {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            opacity: 0.02;
-            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><text x="50%" y="50%" font-size="30" text-anchor="middle" dy=".3em" fill="%23DC143C">🦅</text></svg>');
-            background-size: 200px 200px;
-            animation: eagleFloat 20s linear infinite;
-        }
-
-        @keyframes eagleFloat {
-            from { background-position: 0 0; }
-            to { background-position: 200px 200px; }
-        }
-
-        /* Navbar Cantinho Style */
         .navbar {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
@@ -137,20 +118,16 @@
             color: white;
             font-size: 2rem;
             box-shadow: 0 10px 30px var(--shadow-warm);
-            position: relative;
-            overflow: hidden;
         }
 
         .logo-benfica::before {
             content: '🦅';
-            position: absolute;
-            font-size: 1.8rem;
             animation: eagleBounce 2s ease-in-out infinite;
         }
 
         @keyframes eagleBounce {
-            0%, 100% { transform: scale(1) rotate(0deg); }
-            50% { transform: scale(1.1) rotate(-5deg); }
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
 
         .logo-text {
@@ -165,7 +142,7 @@
             display: flex;
             list-style: none;
             align-items: center;
-            gap: 3rem;
+            gap: 2rem;
         }
 
         .nav-link {
@@ -173,7 +150,6 @@
             text-decoration: none;
             font-weight: 700;
             font-size: 1.1rem;
-            position: relative;
             transition: all 0.3s ease;
             padding: 0.5rem 1rem;
             border-radius: 20px;
@@ -205,70 +181,54 @@
 
         .control-btn:hover {
             background: var(--benfica-gold);
-            color: var(--text-dark);
             transform: translateY(-3px) rotate(360deg);
         }
 
-        /* Hero Cantinho */
+        .db-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .db-status.connected {
+            background: #10b98120;
+            color: #10b981;
+        }
+
+        .db-status.disconnected {
+            background: #ef444420;
+            color: #ef4444;
+        }
+
         .hero-cantinho {
             background: var(--gradient-cantinho);
-            padding: 8rem 2rem;
+            padding: 6rem 2rem;
             text-align: center;
             border-radius: 40px;
             margin: 3rem auto;
             max-width: 1400px;
-            position: relative;
-            overflow: hidden;
             border: 4px solid var(--benfica-red);
         }
 
-        .hero-cantinho::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(
-                from 0deg at 50% 50%, 
-                transparent 0deg, 
-                rgba(220, 20, 60, 0.05) 60deg, 
-                transparent 120deg, 
-                rgba(255, 215, 0, 0.05) 180deg, 
-                transparent 240deg, 
-                rgba(220, 20, 60, 0.05) 300deg, 
-                transparent 360deg
-            );
-            animation: cantinhoSpin 30s linear infinite;
-        }
-
-        @keyframes cantinhoSpin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-        }
-
         .hero-title {
-            font-size: 5rem;
-            margin-bottom: 2rem;
+            font-size: 4.5rem;
+            margin-bottom: 1.5rem;
             background: var(--gradient-benfica);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             font-weight: 900;
-            line-height: 1.1;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
 
         .hero-subtitle {
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             color: var(--text-warm);
             max-width: 800px;
-            margin: 0 auto 3rem;
+            margin: 0 auto 2.5rem;
             line-height: 1.7;
             font-weight: 600;
         }
@@ -282,7 +242,7 @@
             border-radius: 30px;
             font-weight: 800;
             font-size: 1.1rem;
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
             gap: 0.8rem;
             box-shadow: 0 10px 30px var(--shadow-golden);
         }
@@ -292,73 +252,38 @@
             align-items: center;
             background: linear-gradient(135deg, #833AB4, #FD1D1D, #FCB045);
             color: white;
-            padding: 1.8rem 4rem;
+            padding: 1.5rem 3rem;
             border-radius: 30px;
             text-decoration: none;
             font-weight: 800;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             gap: 1rem;
             transition: all 0.4s ease;
             box-shadow: 0 15px 40px rgba(131, 58, 180, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .instagram-btn-hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.6s ease;
-        }
-
-        .instagram-btn-hero:hover::before {
-            left: 100%;
         }
 
         .instagram-btn-hero:hover {
             transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 25px 60px rgba(131, 58, 180, 0.4);
         }
 
-        /* Main Container */
         .main-container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 0 2rem;
         }
 
-        /* Sections Layout */
         .content-layout {
             display: grid;
             grid-template-columns: 1fr 400px;
-            gap: 4rem;
-            margin: 5rem 0;
-        }
-
-        .main-content {
-            display: flex;
-            flex-direction: column;
-            gap: 4rem;
-        }
-
-        .sidebar-content {
-            display: flex;
-            flex-direction: column;
             gap: 3rem;
+            margin: 4rem 0;
         }
 
-        /* Section Styling */
         .content-section {
             background: var(--benfica-white);
             border-radius: 30px;
             padding: 3rem;
             box-shadow: 0 20px 60px var(--shadow-warm);
-            border: 3px solid transparent;
-            background-clip: padding-box;
             position: relative;
         }
 
@@ -380,8 +305,14 @@
         .section-header {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            justify-content: space-between;
             margin-bottom: 2.5rem;
+        }
+
+        .section-header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
         .section-icon {
@@ -398,7 +329,7 @@
         }
 
         .section-title {
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: 800;
             background: var(--gradient-benfica);
             -webkit-background-clip: text;
@@ -407,14 +338,9 @@
             margin: 0;
         }
 
-        /* Posts do Site */
-        .site-posts {
-            grid-column: 1;
-        }
-
         .posts-grid {
             display: grid;
-            gap: 2.5rem;
+            gap: 2rem;
         }
 
         .post-card {
@@ -424,7 +350,8 @@
             box-shadow: 0 15px 40px var(--shadow-golden);
             transition: all 0.4s ease;
             border: 2px solid var(--benfica-gold);
-            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
         }
 
         .post-card:hover {
@@ -433,22 +360,21 @@
         }
 
         .post-image {
-            height: 200px;
+            height: 180px;
             background: var(--gradient-benfica);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 3rem;
-            position: relative;
+            font-size: 3.5rem;
         }
 
         .post-content {
-            padding: 2.5rem;
+            padding: 2rem;
         }
 
         .post-title {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             font-weight: 700;
             margin-bottom: 1rem;
             color: var(--text-dark);
@@ -459,7 +385,7 @@
             color: var(--text-warm);
             margin-bottom: 1.5rem;
             line-height: 1.7;
-            font-size: 1.1rem;
+            font-size: 1rem;
         }
 
         .post-meta {
@@ -472,7 +398,7 @@
 
         .post-date {
             color: var(--benfica-red);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 700;
         }
 
@@ -485,26 +411,15 @@
             font-weight: 700;
         }
 
-        /* Instagram Feed Sidebar */
         .instagram-section {
             background: linear-gradient(135deg, #833AB4, #FD1D1D, #FCB045);
             color: white;
             border-radius: 25px;
-            padding: 0;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .instagram-header {
             padding: 2rem;
             text-align: center;
         }
 
         .instagram-profile {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
             margin-bottom: 1.5rem;
         }
 
@@ -517,18 +432,14 @@
             align-items: center;
             justify-content: center;
             font-size: 2rem;
+            margin: 0 auto 1rem;
             border: 4px solid rgba(255, 255, 255, 0.3);
         }
 
         .instagram-info h3 {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 800;
             margin-bottom: 0.5rem;
-        }
-
-        .instagram-info p {
-            opacity: 0.9;
-            font-size: 1rem;
         }
 
         .follow-btn {
@@ -538,7 +449,7 @@
             border-radius: 20px;
             text-decoration: none;
             font-weight: 700;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 0.8rem;
             transition: all 0.3s ease;
@@ -550,19 +461,6 @@
             transform: translateY(-3px);
         }
 
-        .juicer-container {
-            background: white;
-            border-radius: 0 0 25px 25px;
-            overflow: hidden;
-        }
-
-        .juicer-container iframe {
-            width: 100%;
-            height: 600px;
-            border: none;
-        }
-
-        /* Empty State */
         .empty-state {
             text-align: center;
             padding: 4rem 2rem;
@@ -576,15 +474,13 @@
         }
 
         .empty-state h3 {
-            font-size: 2rem;
+            font-size: 1.8rem;
             margin-bottom: 1rem;
             font-weight: 700;
         }
 
-        /* Staff Section */
         .staff-section {
             display: none;
-            grid-column: 1 / -1;
         }
 
         .staff-section.active {
@@ -599,7 +495,7 @@
         }
 
         .login-form h3 {
-            font-size: 2.5rem;
+            font-size: 2.3rem;
             margin-bottom: 2rem;
             color: var(--benfica-red);
             font-weight: 800;
@@ -607,13 +503,13 @@
 
         .login-input {
             width: 100%;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
+            padding: 1.3rem;
+            margin-bottom: 1.3rem;
             border: 3px solid var(--benfica-gold);
             border-radius: 20px;
             background: var(--cantinho-cream);
             color: var(--text-dark);
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-family: 'Poppins', sans-serif;
             font-weight: 600;
             transition: all 0.3s ease;
@@ -627,12 +523,12 @@
 
         .login-btn {
             width: 100%;
-            padding: 1.5rem;
+            padding: 1.3rem;
             background: var(--gradient-benfica);
             color: white;
             border: none;
             border-radius: 20px;
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             font-weight: 800;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -640,9 +536,14 @@
             box-shadow: 0 10px 30px var(--shadow-warm);
         }
 
-        .login-btn:hover {
+        .login-btn:hover:not(:disabled) {
             transform: translateY(-3px);
             box-shadow: 0 15px 40px var(--shadow-warm);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
         .login-error {
@@ -670,33 +571,33 @@
 
         .add-post-form {
             background: var(--cantinho-cream);
-            padding: 3rem;
+            padding: 2.5rem;
             border-radius: 25px;
             margin-bottom: 3rem;
             border: 3px solid var(--benfica-gold);
         }
 
         .form-group {
-            margin-bottom: 2rem;
+            margin-bottom: 1.8rem;
         }
 
         .form-label {
             display: block;
-            margin-bottom: 1rem;
+            margin-bottom: 0.8rem;
             font-weight: 700;
             color: var(--text-dark);
-            font-size: 1.2rem;
+            font-size: 1.1rem;
         }
 
         .form-input, .form-textarea {
             width: 100%;
-            padding: 1.2rem 1.5rem;
+            padding: 1.1rem 1.3rem;
             border: 3px solid var(--benfica-gold);
             border-radius: 15px;
             background: var(--benfica-white);
             color: var(--text-dark);
             font-family: 'Poppins', sans-serif;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
             transition: all 0.3s ease;
         }
@@ -708,20 +609,20 @@
         }
 
         .form-textarea {
-            height: 120px;
+            min-height: 150px;
             resize: vertical;
         }
 
         .btn-group {
             display: flex;
-            gap: 1.5rem;
+            gap: 1.2rem;
             flex-wrap: wrap;
         }
 
         .btn-secondary {
             background: #6b7280;
             color: white;
-            padding: 1.2rem 2rem;
+            padding: 1.1rem 1.8rem;
             border: none;
             border-radius: 15px;
             font-weight: 700;
@@ -734,16 +635,15 @@
             transform: translateY(-2px);
         }
 
-        /* Staff Posts Management */
         .staff-posts-list {
-            max-height: 500px;
+            max-height: 600px;
             overflow-y: auto;
         }
 
         .staff-post-item {
             background: var(--benfica-white);
-            padding: 2.5rem;
-            margin-bottom: 2rem;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
             border-radius: 20px;
             border: 2px solid var(--benfica-gold);
             transition: all 0.3s ease;
@@ -758,7 +658,7 @@
             background: #ef4444;
             color: white;
             border: none;
-            padding: 1rem 2rem;
+            padding: 0.9rem 1.8rem;
             border-radius: 12px;
             cursor: pointer;
             font-weight: 700;
@@ -771,44 +671,18 @@
             transform: translateY(-2px);
         }
 
-        /* Footer Cantinho */
         .footer {
             background: var(--cantinho-cream);
-            padding: 5rem 0 4rem;
+            padding: 4rem 0 3rem;
             text-align: center;
-            margin-top: 8rem;
+            margin-top: 6rem;
             border-top: 4px solid var(--benfica-red);
-            position: relative;
-        }
-
-        .footer::before {
-            content: '🦅';
-            position: absolute;
-            top: -2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--gradient-benfica);
-            width: 4rem;
-            height: 4rem;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5rem;
-            box-shadow: 0 10px 30px var(--shadow-warm);
-        }
-
-        .footer-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 2rem;
         }
 
         .footer p {
             color: var(--text-warm);
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
             font-weight: 600;
         }
 
@@ -816,15 +690,8 @@
             color: var(--benfica-red);
             text-decoration: none;
             font-weight: 800;
-            transition: all 0.3s ease;
         }
 
-        .footer a:hover {
-            color: var(--benfica-red-dark);
-            transform: scale(1.1);
-        }
-
-        /* Animations */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -836,121 +703,77 @@
             }
         }
 
-        /* Mobile Responsiveness */
-        @media (max-width: 1024px) {
-            .content-layout {
-                grid-template-columns: 1fr;
-                gap: 3rem;
-            }
-
-            .sidebar-content {
-                order: -1;
-            }
-
-            .juicer-container iframe {
-                height: 500px;
-            }
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
         }
 
-        @media (max-width: 768px) {
-            .hero-title {
-                font-size: 3.5rem;
-            }
-
-            .hero-subtitle {
-                font-size: 1.3rem;
-            }
-
-            .nav-menu {
-                gap: 1.5rem;
-                flex-wrap: wrap;
-            }
-
-            .content-section {
-                padding: 2rem;
-                border-radius: 20px;
-            }
-
-            .section-title {
-                font-size: 1.8rem;
-            }
-
-            .main-container {
-                padding: 0 1rem;
-            }
-
-            .btn-group {
-                flex-direction: column;
-            }
+        .loading-overlay.active {
+            display: flex;
         }
 
-        @media (max-width: 480px) {
-            .hero-cantinho {
-                padding: 5rem 1.5rem;
-                margin: 2rem 1rem;
-                border-radius: 25px;
-            }
-
-            .hero-title {
-                font-size: 2.8rem;
-            }
-
-            .hero-subtitle {
-                font-size: 1.1rem;
-            }
-
-            .instagram-btn-hero {
-                padding: 1.5rem 2.5rem;
-                font-size: 1.1rem;
-            }
-
-            .content-section {
-                padding: 1.5rem;
-            }
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        /* Loading Animation */
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
-            border-top-color: #fff;
+            border-top-color: var(--benfica-red);
             animation: spin 1s ease-in-out infinite;
         }
 
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+
+        @media (max-width: 1024px) {
+            .content-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+            .nav-menu {
+                gap: 1rem;
+                font-size: 0.95rem;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="benfica-bg"></div>
-    <div class="eagle-pattern"></div>
+    <div class="loading-overlay" id="loading">
+        <div class="loading-spinner"></div>
+    </div>
     
-    <nav class="navbar" id="navbar">
+    <nav class="navbar">
         <div class="nav-container">
-            <a href="#" class="logo">
+            <a href="#" class="logo" onclick="showHome()">
                 <div class="logo-benfica"></div>
-                <span class="logo-text" data-translate="site-title">Info Benfica</span>
+                <span class="logo-text">Info Benfica</span>
             </a>
             <ul class="nav-menu">
-                <li><a href="#" class="nav-link" onclick="showHome()" data-translate="home">🏠 Cantinho</a></li>
-                <li><a href="#" class="nav-link" onclick="showStaff()" data-translate="staff">⚙️ Staff</a></li>
+                <li><a href="#" class="nav-link" onclick="showHome()">🏠 Cantinho</a></li>
+                <li><a href="#" class="nav-link" onclick="showStaff()">⚙️ Staff</a></li>
                 <li><a href="https://www.instagram.com/info_.benfica" target="_blank" class="nav-link">
                     <i class="fab fa-instagram"></i> Instagram
                 </a></li>
             </ul>
             <div class="nav-controls">
-                <button class="control-btn lang-toggle" onclick="toggleLanguage()" title="Mudar idioma">
-                    <i class="fas fa-globe"></i>
-                </button>
-                <button class="control-btn theme-toggle" onclick="toggleTheme()" title="Tema escuro/claro">
+                <div id="db-status" class="db-status disconnected">
+                    <i class="fas fa-circle"></i> Conectando...
+                </div>
+                <button class="control-btn theme-toggle" onclick="toggleTheme()">
                     <i class="fas fa-moon"></i>
                 </button>
             </div>
@@ -961,73 +784,59 @@
         <div id="home-section">
             <section class="hero-cantinho">
                 <div class="hero-content">
-                    <div class="hero-badge">
-                        🦅 <span data-translate="cantinho-badge">O Cantinho dos Verdadeiros Benfiquistas</span>
-                    </div>
-                    <h1 class="hero-title" data-translate="hero-title">Info Benfica</h1>
-                    <p class="hero-subtitle" data-translate="hero-description">O teu refúgio benfiquista onde encontras as melhores notícias, análises exclusivas e toda a paixão encarnada num só lugar. Bem-vindo ao cantinho onde o Benfica vive!</p>
+                    <div class="hero-badge">🦅 O Cantinho dos Verdadeiros Benfiquistas</div>
+                    <h1 class="hero-title">Info Benfica</h1>
+                    <p class="hero-subtitle">O teu refúgio benfiquista onde encontras as melhores notícias, análises exclusivas e toda a paixão encarnada num só lugar!</p>
                     <a href="https://www.instagram.com/info_.benfica" target="_blank" class="instagram-btn-hero">
-                        <i class="fab fa-instagram"></i>
-                        <span data-translate="follow-instagram">Junta-te à Família</span>
+                        <i class="fab fa-instagram"></i> Junta-te à Família
                     </a>
                 </div>
             </section>
 
             <div class="content-layout">
                 <div class="main-content">
-                    <!-- Posts do Site -->
-                    <section class="content-section site-posts">
+                    <section class="content-section">
                         <div class="section-header">
-                            <div class="section-icon">📝</div>
-                            <h2 class="section-title" data-translate="site-posts">Notícias do Cantinho</h2>
+                            <div class="section-header-left">
+                                <div class="section-icon">📝</div>
+                                <h2 class="section-title">Notícias do Cantinho</h2>
+                            </div>
                         </div>
                         <div class="posts-grid" id="posts-grid">
                             <div class="empty-state">
-                                <i class="fas fa-feather-alt"></i>
-                                <h3 data-translate="no-posts">Ainda não há artigos</h3>
-                                <p data-translate="add-posts-staff">Use a área Staff para adicionar as primeiras notícias do cantinho!</p>
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <h3>A carregar notícias...</h3>
                             </div>
                         </div>
                     </section>
                 </div>
 
                 <div class="sidebar-content">
-                    <!-- Instagram Feed -->
                     <section class="content-section instagram-section">
-                        <div class="instagram-header">
-                            <div class="instagram-profile">
-                                <div class="instagram-avatar">📱</div>
-                                <div class="instagram-info">
-                                    <h3>@info_.benfica</h3>
-                                    <p data-translate="instagram-desc">As últimas do nosso Instagram</p>
-                                </div>
+                        <div class="instagram-profile">
+                            <div class="instagram-avatar">📱</div>
+                            <div class="instagram-info">
+                                <h3>@info_.benfica</h3>
+                                <p>Segue-nos no Instagram!</p>
                             </div>
-                            <a href="https://www.instagram.com/info_.benfica" target="_blank" class="follow-btn">
-                                <i class="fab fa-instagram"></i>
-                                <span data-translate="follow-btn">Seguir</span>
-                            </a>
                         </div>
-                        <div class="juicer-container">
-                            <iframe src="https://www.juicer.io/api/feeds/info_-benfica/iframe" 
-                                    frameborder="0" 
-                                    width="100%" 
-                                    height="600"
-                                    style="display:block;">
-                            </iframe>
-                        </div>
+                        <a href="https://www.instagram.com/info_.benfica" target="_blank" class="follow-btn">
+                            <i class="fab fa-instagram"></i> Seguir
+                        </a>
                     </section>
 
-                    <!-- Widget Informativo -->
                     <section class="content-section">
                         <div class="section-header">
-                            <div class="section-icon">ℹ️</div>
-                            <h3 class="section-title" style="font-size: 1.5rem;" data-translate="about-cantinho">Sobre o Cantinho</h3>
+                            <div class="section-header-left">
+                                <div class="section-icon">ℹ️</div>
+                                <h3 class="section-title" style="font-size: 1.4rem;">Sobre o Cantinho</h3>
+                            </div>
                         </div>
                         <div style="color: var(--text-warm); line-height: 1.7;">
-                            <p data-translate="cantinho-description">Este é o teu espaço benfiquista premium! Aqui encontras conteúdo exclusivo, análises detalhadas e toda a paixão pelo nosso glorioso Benfica.</p>
-                            <div style="margin-top: 2rem; padding: 1.5rem; background: var(--cantinho-cream); border-radius: 15px; border-left: 4px solid var(--benfica-red);">
+                            <p>Este é o teu espaço benfiquista premium! Aqui encontras conteúdo exclusivo, análises detalhadas e toda a paixão pelo nosso glorioso Benfica.</p>
+                            <div style="margin-top: 1.5rem; padding: 1.3rem; background: var(--cantinho-cream); border-radius: 15px; border-left: 4px solid var(--benfica-red);">
                                 <strong style="color: var(--benfica-red);">🔴 Sempre Benfica!</strong><br>
-                                <span data-translate="slogan">No coração de todos os verdadeiros benfiquistas</span>
+                                No coração de todos os verdadeiros benfiquistas
                             </div>
                         </div>
                     </section>
@@ -1035,73 +844,72 @@
             </div>
         </div>
 
-        <!-- Staff Section -->
         <div id="staff-section" class="staff-section">
             <section class="content-section">
                 <div class="section-header">
-                    <div class="section-icon">🔐</div>
-                    <h2 class="section-title" data-translate="staff-area">Área Staff Premium</h2>
+                    <div class="section-header-left">
+                        <div class="section-icon">🔐</div>
+                        <h2 class="section-title">Área Staff Premium</h2>
+                    </div>
                 </div>
                 
                 <div id="login-form" class="login-form">
-                    <h3 data-translate="staff-login">🦅 Acesso Exclusivo do Cantinho</h3>
+                    <h3>🦅 Acesso Exclusivo</h3>
                     <div style="margin-bottom: 2rem; padding: 1rem; background: var(--cantinho-cream); border-radius: 15px; border: 2px dashed var(--benfica-gold);">
                         <p style="color: var(--text-warm); margin: 0; font-weight: 600;">
                             <i class="fas fa-info-circle" style="color: var(--benfica-red);"></i> 
-                            <span data-translate="staff-info">Área restrita para membros da equipa Info Benfica</span>
+                            Área restrita para membros da equipa Info Benfica
                         </p>
                     </div>
-                    <input type="text" id="staff-username" class="login-input" placeholder="Nome de utilizador" data-translate-placeholder="username">
-                    <input type="password" id="staff-password" class="login-input" placeholder="Palavra-passe" data-translate-placeholder="password">
-                    <button class="login-btn" onclick="staffLogin()" data-translate="login">
+                    <input type="text" id="staff-username" class="login-input" placeholder="Nome de utilizador">
+                    <input type="password" id="staff-password" class="login-input" placeholder="Palavra-passe">
+                    <button class="login-btn" onclick="staffLogin()">
                         <span class="btn-text">🔓 Entrar no Cantinho</span>
                     </button>
-                    <div id="login-error" class="login-error" data-translate="login-error">❌ Credenciais incorretas! Tenta novamente.</div>
+                    <div id="login-error" class="login-error">❌ Credenciais incorretas!</div>
                 </div>
                 
                 <div id="staff-panel" class="staff-panel">
-                    <div style="text-align: center; margin-bottom: 3rem;">
-                        <h3 style="color: var(--benfica-red); font-size: 2rem; margin-bottom: 1rem;">
+                    <div style="text-align: center; margin-bottom: 2.5rem;">
+                        <h3 style="color: var(--benfica-red); font-size: 1.9rem; margin-bottom: 0.8rem;">
                             🎉 Bem-vindo ao Painel de Gestão!
                         </h3>
-                        <p style="color: var(--text-warm); font-size: 1.1rem;">
-                            <span data-translate="welcome-msg">Aqui podes gerir todo o conteúdo do cantinho benfiquista</span>
+                        <p style="color: var(--text-warm); font-size: 1.05rem;">
+                            Aqui podes gerir todo o conteúdo do cantinho benfiquista
                         </p>
                     </div>
 
                     <div class="add-post-form">
-                        <h3 style="color: var(--benfica-red); margin-bottom: 2rem; text-align: center;" data-translate="add-post">
-                            ✍️ Adicionar Nova Notícia do Cantinho
+                        <h3 style="color: var(--benfica-red); margin-bottom: 1.8rem; text-align: center;">
+                            ✍️ Adicionar Nova Notícia
                         </h3>
                         <div class="form-group">
-                            <label class="form-label" data-translate="post-title">📰 Título da Notícia:</label>
-                            <input type="text" id="post-title" class="form-input" placeholder="Ex: Benfica conquista vitória épica por 3-0!">
+                            <label class="form-label">📰 Título da Notícia:</label>
+                            <input type="text" id="post-title" class="form-input" placeholder="Ex: Benfica conquista vitória épica!">
                         </div>
                         <div class="form-group">
-                            <label class="form-label" data-translate="post-content">📝 Conteúdo da Notícia:</label>
-                            <textarea id="post-content" class="form-textarea" placeholder="Escreve aqui todos os detalhes da notícia para os benfiquistas..."></textarea>
+                            <label class="form-label">📝 Conteúdo da Notícia:</label>
+                            <textarea id="post-content" class="form-textarea" placeholder="Escreve aqui todos os detalhes..."></textarea>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">🎨 Emoji Representativo:</label>
-                            <input type="text" id="post-emoji" class="form-input" placeholder="⚽🦅🔴🏆" value="⚽">
+                            <label class="form-label">🎨 Emoji:</label>
+                            <input type="text" id="post-emoji" class="form-input" placeholder="⚽" value="⚽">
                         </div>
                         <div class="btn-group">
-                            <button class="login-btn" onclick="addPost()" data-translate="publish">
-                                <i class="fas fa-paper-plane"></i> Publicar no Cantinho
+                            <button class="login-btn" onclick="addPost()">
+                                <i class="fas fa-paper-plane"></i> Publicar
                             </button>
-                            <button class="btn-secondary" onclick="staffLogout()" data-translate="logout">
+                            <button class="btn-secondary" onclick="staffLogout()">
                                 <i class="fas fa-sign-out-alt"></i> Sair
                             </button>
                         </div>
                     </div>
                     
-                    <div style="border-top: 3px solid var(--benfica-gold); margin-top: 3rem; padding-top: 3rem;">
-                        <h3 style="color: var(--benfica-red); margin-bottom: 2rem;" data-translate="manage-posts">
-                            📋 Gestão de Notícias Publicadas
+                    <div style="border-top: 3px solid var(--benfica-gold); margin-top: 2.5rem; padding-top: 2.5rem;">
+                        <h3 style="color: var(--benfica-red); margin-bottom: 1.8rem;">
+                            📋 Notícias Publicadas
                         </h3>
-                        <div id="staff-posts-list" class="staff-posts-list">
-                            <!-- Posts will be loaded here -->
-                        </div>
+                        <div id="staff-posts-list" class="staff-posts-list"></div>
                     </div>
                 </div>
             </section>
@@ -1111,213 +919,246 @@
     <footer class="footer">
         <div class="footer-content">
             <p>&copy; 2025 <strong>Info Benfica - O Cantinho Benfiquista</strong></p>
-            <p><span data-translate="all-rights">Feito com ❤️ para todos os verdadeiros benfiquistas</span></p>
-            <p><span data-translate="follow-us">Segue o nosso cantinho:</span> 
-                <a href="https://www.instagram.com/info_.benfica" target="_blank">@info_.benfica</a>
-            </p>
+            <p>Feito com ❤️ para todos os verdadeiros benfiquistas</p>
+            <p>Segue-nos: <a href="https://www.instagram.com/info_.benfica" target="_blank">@info_.benfica</a></p>
         </div>
     </footer>
 
     <script>
-        // Language translations
-        const translations = {
-            pt: {
-                'site-title': 'Info Benfica',
-                'home': '🏠 Cantinho',
-                'staff': '⚙️ Staff',
-                'cantinho-badge': 'O Cantinho dos Verdadeiros Benfiquistas',
-                'hero-title': 'Info Benfica',
-                'hero-description': 'O teu refúgio benfiquista onde encontras as melhores notícias, análises exclusivas e toda a paixão encarnada num só lugar. Bem-vindo ao cantinho onde o Benfica vive!',
-                'follow-instagram': 'Junta-te à Família',
-                'site-posts': 'Notícias do Cantinho',
-                'instagram-desc': 'As últimas do nosso Instagram',
-                'follow-btn': 'Seguir',
-                'about-cantinho': 'Sobre o Cantinho',
-                'cantinho-description': 'Este é o teu espaço benfiquista premium! Aqui encontras conteúdo exclusivo, análises detalhadas e toda a paixão pelo nosso glorioso Benfica.',
-                'slogan': 'No coração de todos os verdadeiros benfiquistas',
-                'no-posts': 'Ainda não há artigos',
-                'add-posts-staff': 'Use a área Staff para adicionar as primeiras notícias do cantinho!',
-                'staff-area': 'Área Staff Premium',
-                'staff-login': '🦅 Acesso Exclusivo do Cantinho',
-                'staff-info': 'Área restrita para membros da equipa Info Benfica',
-                'username': 'Nome de utilizador',
-                'password': 'Palavra-passe',
-                'login': '🔓 Entrar no Cantinho',
-                'login-error': '❌ Credenciais incorretas! Tenta novamente.',
-                'welcome-msg': 'Aqui podes gerir todo o conteúdo do cantinho benfiquista',
-                'add-post': '✍️ Adicionar Nova Notícia do Cantinho',
-                'post-title': '📰 Título da Notícia:',
-                'post-content': '📝 Conteúdo da Notícia:',
-                'publish': 'Publicar no Cantinho',
-                'logout': 'Sair',
-                'manage-posts': '📋 Gestão de Notícias Publicadas',
-                'all-rights': 'Feito com ❤️ para todos os verdadeiros benfiquistas',
-                'follow-us': 'Segue o nosso cantinho:',
-                'post-added': '🎉 Notícia publicada no cantinho com sucesso!',
-                'fill-fields': '📝 Por favor, preenche todos os campos!',
-                'confirm-delete': '🗑️ Tens certeza que desejas eliminar esta notícia?',
-                'welcome-staff': '👋 Bem-vindo ao cantinho da gestão!'
-            },
-            en: {
-                'site-title': 'Info Benfica',
-                'home': '🏠 Home',
-                'staff': '⚙️ Staff',
-                'cantinho-badge': 'The True Benfica Fans Corner',
-                'hero-title': 'Info Benfica',
-                'hero-description': 'Your Benfica refuge where you find the best news, exclusive analysis and all the red passion in one place. Welcome to the corner where Benfica lives!',
-                'follow-instagram': 'Join the Family',
-                'site-posts': 'Corner News',
-                'instagram-desc': 'Latest from our Instagram',
-                'follow-btn': 'Follow',
-                'about-cantinho': 'About the Corner',
-                'cantinho-description': 'This is your premium Benfica space! Here you find exclusive content, detailed analysis and all the passion for our glorious Benfica.',
-                'slogan': 'In the heart of all true Benfica fans',
-                'no-posts': 'No articles yet',
-                'add-posts-staff': 'Use the Staff area to add the first corner news!',
-                'staff-area': 'Premium Staff Area',
-                'staff-login': '🦅 Exclusive Corner Access',
-                'staff-info': 'Restricted area for Info Benfica team members',
-                'username': 'Username',
-                'password': 'Password',
-                'login': '🔓 Enter the Corner',
-                'login-error': '❌ Incorrect credentials! Try again.',
-                'welcome-msg': 'Here you can manage all the content of the Benfica corner',
-                'add-post': '✍️ Add New Corner News',
-                'post-title': '📰 News Title:',
-                'post-content': '📝 News Content:',
-                'publish': 'Publish to Corner',
-                'logout': 'Logout',
-                'manage-posts': '📋 Published News Management',
-                'all-rights': 'Made with ❤️ for all true Benfica fans',
-                'follow-us': 'Follow our corner:',
-                'post-added': '🎉 News successfully published to the corner!',
-                'fill-fields': '📝 Please fill all fields!',
-                'confirm-delete': '🗑️ Are you sure you want to delete this news?',
-                'welcome-staff': '👋 Welcome to the management corner!'
-            }
-        };
+        // ========================================
+        // CONFIGURAÇÃO SUPABASE
+        // ========================================
+        const SUPABASE_URL = 'https://xqfktdyopxsctogncums.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxZmt0ZHlvcHhzY3RvZ25jdW1zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzc0NTA2OTIsImV4cCI6MjA1MzAyNjY5Mn0.4z_vAHsXvKJ7bKmRCsqzNH-NmEJi3rTp-MFRLAjO8yo';
 
-        let currentLanguage = 'pt';
-        let currentTheme = 'light';
-        let isStaffLoggedIn = false;
-        let posts = [];
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // Enhanced credentials
+        // Credenciais Staff
         const STAFF_CREDENTIALS = {
             username: 'BenficaAdmin',
             password: 'Cantinho2025!@'
         };
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            loadPosts();
-            updateLanguage();
-            
-            // Navbar scroll effect
-            window.addEventListener('scroll', function() {
-                const navbar = document.getElementById('navbar');
-                if (window.scrollY > 50) {
-                    navbar.style.boxShadow = '0 10px 40px var(--shadow-warm)';
-                } else {
-                    navbar.style.boxShadow = '0 8px 32px var(--shadow-warm)';
-                }
-            });
+        let currentTheme = 'light';
+        let isStaffLoggedIn = false;
 
-            // Add welcome animation
+        // ========================================
+        // INICIALIZAÇÃO
+        // ========================================
+        document.addEventListener('DOMContentLoaded', async function() {
+            await loadPosts();
+            
             setTimeout(() => {
                 showNotification('🦅 Bem-vindo ao cantinho benfiquista!', 'success');
-            }, 1000);
+            }, 800);
         });
 
-        // Enhanced theme toggle
-        function toggleTheme() {
-            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', currentTheme);
+        // ========================================
+        // CARREGAR POSTS DA BASE DE DADOS
+        // ========================================
+        async function loadPosts() {
+            showLoading(true);
+            const postsGrid = document.getElementById('posts-grid');
             
-            const themeButton = document.querySelector('.theme-toggle i');
-            themeButton.className = currentTheme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
-            
-            // Theme change animation
-            document.body.style.transition = 'all 0.5s ease';
-            document.body.style.transform = 'scale(0.98)';
-            setTimeout(() => {
-                document.body.style.transform = 'scale(1)';
-            }, 200);
-            
-            showNotification(
-                currentTheme === 'dark' ? '🌙 Modo escuro ativado' : '☀️ Modo claro ativado', 
-                'info'
-            );
-        }
-
-        // Language toggle
-        function toggleLanguage() {
-            currentLanguage = currentLanguage === 'pt' ? 'en' : 'pt';
-            updateLanguage();
-            
-            const langButton = document.querySelector('.lang-toggle');
-            langButton.style.transform = 'rotateY(180deg)';
-            setTimeout(() => {
-                langButton.style.transform = 'rotateY(0deg)';
-            }, 300);
-            
-            showNotification(
-                currentLanguage === 'pt' ? '🇵🇹 Português' : '🇬🇧 English', 
-                'info'
-            );
-        }
-
-        function updateLanguage() {
-            const elements = document.querySelectorAll('[data-translate]');
-            elements.forEach(element => {
-                const key = element.getAttribute('data-translate');
-                if (translations[currentLanguage][key]) {
-                    element.textContent = translations[currentLanguage][key];
+            try {
+                const { data: posts, error } = await supabase
+                    .from('posts')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                updateDBStatus(true);
+                
+                if (!posts || posts.length === 0) {
+                    postsGrid.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-feather-alt"></i>
+                            <h3>Ainda não há artigos</h3>
+                            <p>Use a área Staff para adicionar as primeiras notícias!</p>
+                        </div>
+                    `;
+                    showLoading(false);
+                    return;
                 }
-            });
-
-            const placeholderElements = document.querySelectorAll('[data-translate-placeholder]');
-            placeholderElements.forEach(element => {
-                const key = element.getAttribute('data-translate-placeholder');
-                if (translations[currentLanguage][key]) {
-                    element.placeholder = translations[currentLanguage][key];
-                }
-            });
-        }
-
-        // Navigation with smooth transitions
-        function showHome() {
-            const homeSection = document.getElementById('home-section');
-            const staffSection = document.getElementById('staff-section');
-            
-            staffSection.classList.remove('active');
-            homeSection.style.display = 'block';
-            homeSection.style.animation = 'fadeInUp 0.6s ease';
-            
-            showNotification('🏠 Bem-vindo de volta ao cantinho!', 'info');
-        }
-
-        function showStaff() {
-            const homeSection = document.getElementById('home-section');
-            const staffSection = document.getElementById('staff-section');
-            
-            homeSection.style.display = 'none';
-            staffSection.classList.add('active');
-            
-            if (!isStaffLoggedIn) {
-                document.getElementById('login-form').style.display = 'block';
-                document.getElementById('staff-panel').classList.remove('active');
+                
+                postsGrid.innerHTML = '';
+                
+                posts.forEach((post, index) => {
+                    const card = createPostCard(post);
+                    postsGrid.appendChild(card);
+                    
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, index * 100);
+                });
+                
+            } catch (error) {
+                console.error('Erro:', error);
+                showNotification('❌ Erro ao carregar: ' + error.message, 'error');
+                updateDBStatus(false);
+                
+                postsGrid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Erro de Conexão</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            } finally {
+                showLoading(false);
             }
         }
 
-        // Enhanced staff login
+        // ========================================
+        // CRIAR CARD DE POST
+        // ========================================
+        function createPostCard(post) {
+            const card = document.createElement('div');
+            card.className = 'post-card';
+            card.innerHTML = `
+                <div class="post-image">${post.emoji || '📰'}</div>
+                <div class="post-content">
+                    <h3 class="post-title">${escapeHtml(post.title)}</h3>
+                    <p class="post-excerpt">${escapeHtml(post.content)}</p>
+                    <div class="post-meta">
+                        <p class="post-date">${formatDate(post.created_at)}</p>
+                        <span class="post-source">Cantinho</span>
+                    </div>
+                </div>
+            `;
+            return card;
+        }
+
+        // ========================================
+        // ADICIONAR POST
+        // ========================================
+        async function addPost() {
+            const title = document.getElementById('post-title').value.trim();
+            const content = document.getElementById('post-content').value.trim();
+            const emoji = document.getElementById('post-emoji').value.trim() || '📰';
+            
+            if (!title || !content) {
+                showNotification('📝 Preenche todos os campos!', 'error');
+                return;
+            }
+            
+            showLoading(true);
+            
+            try {
+                const { data, error } = await supabase
+                    .from('posts')
+                    .insert([{ title, content, emoji }])
+                    .select();
+                
+                if (error) throw error;
+                
+                document.getElementById('post-title').value = '';
+                document.getElementById('post-content').value = '';
+                document.getElementById('post-emoji').value = '⚽';
+                
+                await loadPosts();
+                await loadStaffPosts();
+                
+                showNotification('🎉 Notícia publicada com sucesso!', 'success');
+            } catch (error) {
+                showNotification('❌ Erro: ' + error.message, 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // ========================================
+        // ELIMINAR POST
+        // ========================================
+        async function deletePost(postId) {
+            if (!confirm('🗑️ Tens certeza que desejas eliminar esta notícia?')) return;
+            
+            showLoading(true);
+            
+            try {
+                const { error } = await supabase
+                    .from('posts')
+                    .delete()
+                    .eq('id', postId);
+                
+                if (error) throw error;
+                
+                await loadPosts();
+                await loadStaffPosts();
+                
+                showNotification('🗑️ Notícia eliminada!', 'info');
+            } catch (error) {
+                showNotification('❌ Erro: ' + error.message, 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // ========================================
+        // CARREGAR POSTS NO PAINEL STAFF
+        // ========================================
+        async function loadStaffPosts() {
+            const staffPostsList = document.getElementById('staff-posts-list');
+            
+            try {
+                const { data: posts, error } = await supabase
+                    .from('posts')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                if (!posts || posts.length === 0) {
+                    staffPostsList.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-clipboard-list"></i>
+                            <h3>Nenhuma notícia ainda</h3>
+                            <p>Adiciona a primeira notícia acima</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                staffPostsList.innerHTML = '';
+                
+                posts.forEach(post => {
+                    const postElement = document.createElement('div');
+                    postElement.className = 'staff-post-item';
+                    postElement.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                            <h4 style="color: var(--benfica-red); margin: 0; font-size: 1.2rem; font-weight: 800;">
+                                ${post.emoji} ${escapeHtml(post.title)}
+                            </h4>
+                            <span style="color: var(--text-warm); font-size: 0.85rem; font-weight: 600;">
+                                ${formatDate(post.created_at)}
+                            </span>
+                        </div>
+                        <p style="color: var(--text-warm); margin: 1rem 0; line-height: 1.6;">
+                            ${escapeHtml(post.content)}
+                        </p>
+                        <button class="delete-btn" onclick="deletePost(${post.id})">
+                            <i class="fas fa-trash"></i> Eliminar
+                        </button>
+                    `;
+                    staffPostsList.appendChild(postElement);
+                });
+            } catch (error) {
+                console.error('Erro:', error);
+            }
+        }
+
+        // ========================================
+        // LOGIN STAFF
+        // ========================================
         function staffLogin() {
             const username = document.getElementById('staff-username').value.trim();
             const password = document.getElementById('staff-password').value;
             const loginBtn = document.querySelector('.login-btn');
             const btnText = loginBtn.querySelector('.btn-text');
             
-            btnText.innerHTML = '<span class="loading"></span> Verificando...';
+            btnText.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verificando...';
             loginBtn.disabled = true;
             
             setTimeout(() => {
@@ -1331,7 +1172,7 @@
                     document.getElementById('staff-password').value = '';
                     
                     loadStaffPosts();
-                    showNotification(translations[currentLanguage]['welcome-staff'], 'success');
+                    showNotification('👋 Bem-vindo ao painel!', 'success');
                 } else {
                     document.getElementById('login-error').style.display = 'block';
                     document.getElementById('staff-password').value = '';
@@ -1340,7 +1181,7 @@
                 
                 btnText.innerHTML = '🔓 Entrar no Cantinho';
                 loginBtn.disabled = false;
-            }, 1500);
+            }, 1200);
         }
 
         function staffLogout() {
@@ -1349,174 +1190,97 @@
             document.getElementById('staff-panel').classList.remove('active');
             document.getElementById('staff-username').value = '';
             document.getElementById('staff-password').value = '';
-            
-            showNotification('👋 Até breve no cantinho!', 'info');
+            showNotification('👋 Até breve!', 'info');
         }
 
-        // Enhanced posts management
-        function loadPosts() {
-            const postsGrid = document.getElementById('posts-grid');
-            
-            if (posts.length === 0) {
-                postsGrid.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-feather-alt"></i>
-                        <h3 data-translate="no-posts">${translations[currentLanguage]['no-posts']}</h3>
-                        <p data-translate="add-posts-staff">${translations[currentLanguage]['add-posts-staff']}</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            postsGrid.innerHTML = '';
-            
-            posts.slice().reverse().forEach((post, index) => {
-                const postCard = createPostCard(post, index);
-                postsGrid.appendChild(postCard);
-                
-                setTimeout(() => {
-                    postCard.style.opacity = '1';
-                    postCard.style.transform = 'translateY(0)';
-                }, index * 150);
-            });
+        // ========================================
+        // NAVEGAÇÃO
+        // ========================================
+        function showHome() {
+            document.getElementById('home-section').style.display = 'block';
+            document.getElementById('staff-section').classList.remove('active');
+            loadPosts();
         }
 
-        function createPostCard(post, index) {
-            const card = document.createElement('div');
-            card.className = 'post-card';
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(30px)';
-            card.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-            card.innerHTML = `
-                <div class="post-image">${post.emoji || '📰'}</div>
-                <div class="post-content">
-                    <h3 class="post-title">${post.title}</h3>
-                    <p class="post-excerpt">${post.content}</p>
-                    <div class="post-meta">
-                        <p class="post-date">${formatDate(post.date)}</p>
-                        <span class="post-source">Cantinho</span>
-                    </div>
-                </div>
-            `;
-            return card;
-        }
-
-        function addPost() {
-            const title = document.getElementById('post-title').value.trim();
-            const content = document.getElementById('post-content').value.trim();
-            const emoji = document.getElementById('post-emoji').value.trim() || '📰';
+        function showStaff() {
+            document.getElementById('home-section').style.display = 'none';
+            document.getElementById('staff-section').classList.add('active');
             
-            if (title && content) {
-                const newPost = {
-                    id: Date.now(),
-                    title: title,
-                    content: content,
-                    emoji: emoji,
-                    date: new Date().toISOString().split('T')[0],
-                    timestamp: new Date().toISOString()
-                };
-                
-                posts.push(newPost);
-                loadPosts();
-                loadStaffPosts();
-                
-                // Clear form with animation
-                const form = document.querySelector('.add-post-form');
-                form.style.transform = 'scale(0.95)';
-                setTimeout(() => {
-                    document.getElementById('post-title').value = '';
-                    document.getElementById('post-content').value = '';
-                    document.getElementById('post-emoji').value = '⚽';
-                    form.style.transform = 'scale(1)';
-                }, 200);
-                
-                showNotification(translations[currentLanguage]['post-added'], 'success');
-            } else {
-                showNotification(translations[currentLanguage]['fill-fields'], 'error');
+            if (!isStaffLoggedIn) {
+                document.getElementById('login-form').style.display = 'block';
+                document.getElementById('staff-panel').classList.remove('active');
             }
         }
 
-        function loadStaffPosts() {
-            const staffPostsList = document.getElementById('staff-posts-list');
+        // ========================================
+        // TEMA
+        // ========================================
+        function toggleTheme() {
+            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', currentTheme);
             
-            if (posts.length === 0) {
-                staffPostsList.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-clipboard-list"></i>
-                        <h3>Nenhuma notícia ainda</h3>
-                        <p>Adiciona a primeira notícia do cantinho acima</p>
-                    </div>
-                `;
-                return;
-            }
+            const icon = document.querySelector('.theme-toggle i');
+            icon.className = currentTheme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
             
-            staffPostsList.innerHTML = '';
-            
-            posts.slice().reverse().forEach(post => {
-                const postElement = document.createElement('div');
-                postElement.className = 'staff-post-item';
-                postElement.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
-                        <h4 style="color: var(--benfica-red); margin: 0; font-size: 1.3rem; font-weight: 800;">${post.emoji} ${post.title}</h4>
-                        <span style="color: var(--text-warm); font-size: 0.9rem; font-weight: 600;">${formatDate(post.date)}</span>
-                    </div>
-                    <p style="color: var(--text-warm); margin: 1rem 0; line-height: 1.7; font-size: 1rem;">${post.content}</p>
-                    <button class="delete-btn" onclick="deletePost(${post.id})">
-                        <i class="fas fa-trash"></i> Eliminar Notícia
-                    </button>
-                `;
-                staffPostsList.appendChild(postElement);
-            });
+            showNotification(
+                currentTheme === 'dark' ? '🌙 Modo escuro' : '☀️ Modo claro', 
+                'info'
+            );
         }
 
-        function deletePost(postId) {
-            if (confirm(translations[currentLanguage]['confirm-delete'])) {
-                posts = posts.filter(post => post.id !== postId);
-                loadPosts();
-                loadStaffPosts();
-                showNotification('🗑️ Notícia eliminada do cantinho!', 'info');
-            }
-        }
-
+        // ========================================
+        // UTILITÁRIOS
+        // ========================================
         function formatDate(dateString) {
-            const options = { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric',
-                weekday: 'long'
-            };
             const date = new Date(dateString);
-            return currentLanguage === 'pt' ? 
-                date.toLocaleDateString('pt-PT', options) : 
-                date.toLocaleDateString('en-US', options);
+            const options = { day: 'numeric', month: 'long', year: 'numeric' };
+            return date.toLocaleDateString('pt-PT', options);
         }
 
-        // Enhanced notification system
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function showLoading(show) {
+            document.getElementById('loading').classList.toggle('active', show);
+        }
+
+        function updateDBStatus(connected) {
+            const status = document.getElementById('db-status');
+            if (connected) {
+                status.className = 'db-status connected';
+                status.innerHTML = '<i class="fas fa-circle"></i> Conectado';
+            } else {
+                status.className = 'db-status disconnected';
+                status.innerHTML = '<i class="fas fa-circle"></i> Offline';
+            }
+        }
+
         function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
             const colors = {
                 success: '#10b981',
                 error: '#ef4444',
-                info: '#3b82f6',
-                warning: '#f59e0b'
+                info: '#3b82f6'
             };
             
+            const notification = document.createElement('div');
             notification.style.cssText = `
                 position: fixed;
                 top: 20px;
                 right: 20px;
                 background: ${colors[type]};
                 color: white;
-                padding: 1.5rem 2rem;
+                padding: 1.2rem 2rem;
                 border-radius: 20px;
-                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
                 z-index: 10000;
                 font-weight: 700;
-                font-size: 1rem;
+                font-size: 0.95rem;
                 max-width: 400px;
                 transform: translateX(100%);
                 transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-                border: 3px solid rgba(255, 255, 255, 0.2);
             `;
             notification.textContent = message;
             
@@ -1533,10 +1297,10 @@
                         notification.parentNode.removeChild(notification);
                     }
                 }, 400);
-            }, 4000);
+            }, 3500);
         }
 
-        // Enter key support
+        // Enter key login
         document.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 const staffSection = document.getElementById('staff-section');
