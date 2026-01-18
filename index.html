@@ -9,768 +9,117 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
-            --benfica-red: #DC143C;
-            --benfica-red-dark: #B91C3C;
-            --benfica-gold: #FFD700;
-            --benfica-white: #FFFFFF;
-            --cantinho-warm: #FFF5F5;
-            --cantinho-cream: #FFFBEB;
-            --text-dark: #1a202c;
-            --text-warm: #744210;
-            --shadow-warm: rgba(220, 20, 60, 0.1);
-            --shadow-golden: rgba(255, 215, 0, 0.2);
+            --benfica-red: #DC143C; --benfica-red-dark: #B91C3C; --benfica-gold: #FFD700;
+            --benfica-white: #FFFFFF; --cantinho-warm: #FFF5F5; --cantinho-cream: #FFFBEB;
+            --text-dark: #1a202c; --text-warm: #744210;
+            --shadow-warm: rgba(220, 20, 60, 0.1); --shadow-golden: rgba(255, 215, 0, 0.2);
             --gradient-benfica: linear-gradient(135deg, #DC143C 0%, #B91C3C 50%, #8B0000 100%);
             --gradient-gold: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
             --gradient-cantinho: linear-gradient(135deg, rgba(220, 20, 60, 0.03) 0%, rgba(255, 215, 0, 0.03) 100%);
         }
-
         [data-theme="dark"] {
-            --cantinho-warm: #2d1b1b;
-            --cantinho-cream: #2d2416;
-            --text-dark: #f7fafc;
-            --text-warm: #fed7aa;
-            --shadow-warm: rgba(220, 20, 60, 0.3);
-            --shadow-golden: rgba(255, 215, 0, 0.3);
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: var(--cantinho-warm);
-            color: var(--text-dark);
-            transition: all 0.4s ease;
-            overflow-x: hidden;
-        }
-
-        .benfica-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            opacity: 0.04;
-            background: 
-                radial-gradient(circle at 20% 20%, var(--benfica-red) 0%, transparent 30%),
-                radial-gradient(circle at 80% 80%, var(--benfica-gold) 0%, transparent 30%);
-            animation: benficaPulse 15s ease-in-out infinite;
-        }
-
-        @keyframes benficaPulse {
-            0%, 100% { opacity: 0.04; transform: scale(1); }
-            50% { opacity: 0.08; transform: scale(1.1); }
-        }
-
-        .navbar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 3px solid var(--benfica-red);
-            padding: 1.2rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 8px 32px var(--shadow-warm);
-        }
-
-        [data-theme="dark"] .navbar {
-            background: rgba(45, 27, 27, 0.95);
-            border-bottom-color: var(--benfica-gold);
-        }
-
-        .nav-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            font-size: 2rem;
-            font-weight: 900;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .logo:hover {
-            transform: scale(1.05);
-        }
-
-        .logo-benfica {
-            width: 60px;
-            height: 60px;
-            background: var(--gradient-benfica);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 1rem;
-            color: white;
-            font-size: 2rem;
-            box-shadow: 0 10px 30px var(--shadow-warm);
-        }
-
-        .logo-benfica::before {
-            content: '🦅';
-            animation: eagleBounce 2s ease-in-out infinite;
-        }
-
-        @keyframes eagleBounce {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        .logo-text {
-            background: var(--gradient-benfica);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 900;
-        }
-
-        .nav-menu {
-            display: flex;
-            list-style: none;
-            align-items: center;
-            gap: 2rem;
-        }
-
-        .nav-link {
-            color: var(--text-dark);
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-        }
-
-        .nav-link:hover {
-            background: var(--gradient-cantinho);
-            color: var(--benfica-red);
-            transform: translateY(-2px);
-        }
-
-        .nav-controls {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .control-btn {
-            background: var(--cantinho-cream);
-            border: 2px solid var(--benfica-gold);
-            color: var(--text-dark);
-            padding: 0.8rem;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1.1rem;
-            box-shadow: 0 4px 15px var(--shadow-golden);
-        }
-
-        .control-btn:hover {
-            background: var(--benfica-gold);
-            transform: translateY(-3px) rotate(360deg);
-        }
-
-        .db-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.6rem 1.2rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 700;
-        }
-
-        .db-status.connected {
-            background: #10b98120;
-            color: #10b981;
-        }
-
-        .db-status.disconnected {
-            background: #ef444420;
-            color: #ef4444;
-        }
-
-        .hero-cantinho {
-            background: var(--gradient-cantinho);
-            padding: 6rem 2rem;
-            text-align: center;
-            border-radius: 40px;
-            margin: 3rem auto;
-            max-width: 1400px;
-            border: 4px solid var(--benfica-red);
-        }
-
-        .hero-title {
-            font-size: 4.5rem;
-            margin-bottom: 1.5rem;
-            background: var(--gradient-benfica);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 900;
-        }
-
-        .hero-subtitle {
-            font-size: 1.4rem;
-            color: var(--text-warm);
-            max-width: 800px;
-            margin: 0 auto 2.5rem;
-            line-height: 1.7;
-            font-weight: 600;
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            background: var(--gradient-gold);
-            color: var(--text-dark);
-            padding: 1rem 2rem;
-            border-radius: 30px;
-            font-weight: 800;
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-            gap: 0.8rem;
-            box-shadow: 0 10px 30px var(--shadow-golden);
-        }
-
-        .instagram-btn-hero {
-            display: inline-flex;
-            align-items: center;
-            background: linear-gradient(135deg, #833AB4, #FD1D1D, #FCB045);
-            color: white;
-            padding: 1.5rem 3rem;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: 800;
-            font-size: 1.2rem;
-            gap: 1rem;
-            transition: all 0.4s ease;
-            box-shadow: 0 15px 40px rgba(131, 58, 180, 0.3);
-        }
-
-        .instagram-btn-hero:hover {
-            transform: translateY(-5px) scale(1.05);
-        }
-
-        .main-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .content-layout {
-            display: grid;
-            grid-template-columns: 1fr 400px;
-            gap: 3rem;
-            margin: 4rem 0;
-        }
-
-        .content-section {
-            background: var(--benfica-white);
-            border-radius: 30px;
-            padding: 3rem;
-            box-shadow: 0 20px 60px var(--shadow-warm);
-            position: relative;
-        }
-
-        .content-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 6px;
-            background: var(--gradient-benfica);
-            border-radius: 30px 30px 0 0;
-        }
-
-        [data-theme="dark"] .content-section {
-            background: var(--cantinho-warm);
-        }
-
-        .section-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 2.5rem;
-        }
-
-        .section-header-left {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .section-icon {
-            width: 50px;
-            height: 50px;
-            background: var(--gradient-benfica);
-            color: white;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            box-shadow: 0 8px 25px var(--shadow-warm);
-        }
-
-        .section-title {
-            font-size: 2rem;
-            font-weight: 800;
-            background: var(--gradient-benfica);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin: 0;
-        }
-
-        .posts-grid {
-            display: grid;
-            gap: 2rem;
-        }
-
-        .post-card {
-            background: var(--cantinho-cream);
-            border-radius: 25px;
-            overflow: hidden;
-            box-shadow: 0 15px 40px var(--shadow-golden);
-            transition: all 0.4s ease;
-            border: 2px solid var(--benfica-gold);
-            opacity: 0;
-            transform: translateY(30px);
-        }
-
-        .post-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 25px 60px var(--shadow-warm);
-        }
-
-        .post-image {
-            height: 180px;
-            background: var(--gradient-benfica);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 3.5rem;
-        }
-
-        .post-content {
-            padding: 2rem;
-        }
-
-        .post-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: var(--text-dark);
-            line-height: 1.3;
-        }
-
-        .post-excerpt {
-            color: var(--text-warm);
-            margin-bottom: 1.5rem;
-            line-height: 1.7;
-            font-size: 1rem;
-        }
-
-        .post-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 1rem;
-            border-top: 2px solid var(--benfica-gold);
-        }
-
-        .post-date {
-            color: var(--benfica-red);
-            font-size: 0.9rem;
-            font-weight: 700;
-        }
-
-        .post-source {
-            background: var(--gradient-gold);
-            color: var(--text-dark);
-            padding: 0.4rem 1rem;
-            border-radius: 15px;
-            font-size: 0.85rem;
-            font-weight: 700;
-        }
-
-        .instagram-section {
-            background: linear-gradient(135deg, #833AB4, #FD1D1D, #FCB045);
-            color: white;
-            border-radius: 25px;
-            padding: 2rem;
-            text-align: center;
-        }
-
-        .instagram-profile {
-            margin-bottom: 1.5rem;
-        }
-
-        .instagram-avatar {
-            width: 80px;
-            height: 80px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            margin: 0 auto 1rem;
-            border: 4px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .instagram-info h3 {
-            font-size: 1.6rem;
-            font-weight: 800;
-            margin-bottom: 0.5rem;
-        }
-
-        .follow-btn {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 20px;
-            text-decoration: none;
-            font-weight: 700;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.8rem;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-
-        .follow-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-3px);
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 4rem 2rem;
-            color: var(--text-warm);
-        }
-
-        .empty-state i {
-            font-size: 4rem;
-            margin-bottom: 1.5rem;
-            color: var(--benfica-red);
-        }
-
-        .empty-state h3 {
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-            font-weight: 700;
-        }
-
-        .empty-state pre {
-            text-align: left;
-            font-size: 0.8rem;
-            line-height: 1.5;
-            color: #333;
-        }
-
-        .empty-state ol {
-            padding-left: 1.5rem;
-        }
-
-        .empty-state li {
-            margin-bottom: 0.5rem;
-        }
-
-        .staff-section {
-            display: none;
-        }
-
-        .staff-section.active {
-            display: block;
-            animation: fadeInUp 0.5s ease;
-        }
-
-        .login-form {
-            text-align: center;
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        .login-form h3 {
-            font-size: 2.3rem;
-            margin-bottom: 2rem;
-            color: var(--benfica-red);
-            font-weight: 800;
-        }
-
-        .login-input {
-            width: 100%;
-            padding: 1.3rem;
-            margin-bottom: 1.3rem;
-            border: 3px solid var(--benfica-gold);
-            border-radius: 20px;
-            background: var(--cantinho-cream);
-            color: var(--text-dark);
-            font-size: 1.05rem;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .login-input:focus {
-            outline: none;
-            border-color: var(--benfica-red);
-            box-shadow: 0 0 0 4px rgba(220, 20, 60, 0.1);
-        }
-
-        .login-btn {
-            width: 100%;
-            padding: 1.3rem;
-            background: var(--gradient-benfica);
-            color: white;
-            border: none;
-            border-radius: 20px;
-            font-size: 1.15rem;
-            font-weight: 800;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Poppins', sans-serif;
-            box-shadow: 0 10px 30px var(--shadow-warm);
-        }
-
-        .login-btn:hover:not(:disabled) {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px var(--shadow-warm);
-        }
-
-        .login-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .login-error {
-            color: var(--benfica-red);
-            margin-top: 1rem;
-            display: none;
-            font-weight: 700;
-            animation: shake 0.5s ease;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
-
-        .staff-panel {
-            display: none;
-        }
-
-        .staff-panel.active {
-            display: block;
-            animation: fadeInUp 0.5s ease;
-        }
-
-        .add-post-form {
-            background: var(--cantinho-cream);
-            padding: 2.5rem;
-            border-radius: 25px;
-            margin-bottom: 3rem;
-            border: 3px solid var(--benfica-gold);
-        }
-
-        .form-group {
-            margin-bottom: 1.8rem;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 0.8rem;
-            font-weight: 700;
-            color: var(--text-dark);
-            font-size: 1.1rem;
-        }
-
-        .form-input, .form-textarea {
-            width: 100%;
-            padding: 1.1rem 1.3rem;
-            border: 3px solid var(--benfica-gold);
-            border-radius: 15px;
-            background: var(--benfica-white);
-            color: var(--text-dark);
-            font-family: 'Poppins', sans-serif;
-            font-size: 0.95rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .form-input:focus, .form-textarea:focus {
-            outline: none;
-            border-color: var(--benfica-red);
-            box-shadow: 0 0 0 3px rgba(220, 20, 60, 0.1);
-        }
-
-        .form-textarea {
-            min-height: 150px;
-            resize: vertical;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 1.2rem;
-            flex-wrap: wrap;
-        }
-
-        .btn-secondary {
-            background: #6b7280;
-            color: white;
-            padding: 1.1rem 1.8rem;
-            border: none;
-            border-radius: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-secondary:hover {
-            background: #4b5563;
-            transform: translateY(-2px);
-        }
-
-        .staff-posts-list {
-            max-height: 600px;
-            overflow-y: auto;
-        }
-
-        .staff-post-item {
-            background: var(--benfica-white);
-            padding: 2rem;
-            margin-bottom: 1.5rem;
-            border-radius: 20px;
-            border: 2px solid var(--benfica-gold);
-            transition: all 0.3s ease;
-        }
-
-        .staff-post-item:hover {
-            box-shadow: 0 10px 30px var(--shadow-golden);
-            transform: translateY(-2px);
-        }
-
-        .delete-btn {
-            background: #ef4444;
-            color: white;
-            border: none;
-            padding: 0.9rem 1.8rem;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 700;
-            margin-top: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .delete-btn:hover {
-            background: #dc2626;
-            transform: translateY(-2px);
-        }
-
-        .footer {
-            background: var(--cantinho-cream);
-            padding: 4rem 0 3rem;
-            text-align: center;
-            margin-top: 6rem;
-            border-top: 4px solid var(--benfica-red);
-        }
-
-        .footer p {
-            color: var(--text-warm);
-            font-size: 1.1rem;
-            margin-bottom: 0.8rem;
-            font-weight: 600;
-        }
-
-        .footer a {
-            color: var(--benfica-red);
-            text-decoration: none;
-            font-weight: 800;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-        }
-
-        .loading-overlay.active {
-            display: flex;
-        }
-
-        .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 5px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: var(--benfica-red);
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        @media (max-width: 1024px) {
-            .content-layout {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .hero-title {
-                font-size: 3rem;
-            }
-            .nav-menu {
-                gap: 1rem;
-                font-size: 0.95rem;
-            }
-        }
+            --cantinho-warm: #2d1b1b; --cantinho-cream: #2d2416; --text-dark: #f7fafc;
+            --text-warm: #fed7aa; --shadow-warm: rgba(220, 20, 60, 0.3); --shadow-golden: rgba(255, 215, 0, 0.3);
+        }
+        body { font-family: 'Poppins', sans-serif; background: var(--cantinho-warm); color: var(--text-dark); transition: all 0.4s ease; overflow-x: hidden; }
+        .benfica-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.04; background: radial-gradient(circle at 20% 20%, var(--benfica-red) 0%, transparent 30%), radial-gradient(circle at 80% 80%, var(--benfica-gold) 0%, transparent 30%); animation: benficaPulse 15s ease-in-out infinite; }
+        @keyframes benficaPulse { 0%, 100% { opacity: 0.04; transform: scale(1); } 50% { opacity: 0.08; transform: scale(1.1); } }
+        .navbar { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border-bottom: 3px solid var(--benfica-red); padding: 1.2rem 0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 8px 32px var(--shadow-warm); }
+        [data-theme="dark"] .navbar { background: rgba(45, 27, 27, 0.95); border-bottom-color: var(--benfica-gold); }
+        .nav-container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; font-size: 2rem; font-weight: 900; text-decoration: none; transition: all 0.3s ease; cursor: pointer; }
+        .logo:hover { transform: scale(1.05); }
+        .logo-benfica { width: 60px; height: 60px; background: var(--gradient-benfica); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 1rem; color: white; font-size: 2rem; box-shadow: 0 10px 30px var(--shadow-warm); }
+        .logo-benfica::before { content: '🦅'; animation: eagleBounce 2s ease-in-out infinite; }
+        @keyframes eagleBounce { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        .logo-text { background: var(--gradient-benfica); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 900; }
+        .nav-menu { display: flex; list-style: none; align-items: center; gap: 2rem; }
+        .nav-link { color: var(--text-dark); text-decoration: none; font-weight: 700; font-size: 1.1rem; transition: all 0.3s ease; padding: 0.5rem 1rem; border-radius: 20px; cursor: pointer; }
+        .nav-link:hover { background: var(--gradient-cantinho); color: var(--benfica-red); transform: translateY(-2px); }
+        .nav-controls { display: flex; align-items: center; gap: 1rem; }
+        .control-btn { background: var(--cantinho-cream); border: 2px solid var(--benfica-gold); color: var(--text-dark); padding: 0.8rem; border-radius: 50%; cursor: pointer; transition: all 0.3s ease; font-size: 1.1rem; box-shadow: 0 4px 15px var(--shadow-golden); }
+        .control-btn:hover { background: var(--benfica-gold); transform: translateY(-3px) rotate(360deg); }
+        .db-status { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.2rem; border-radius: 20px; font-size: 0.85rem; font-weight: 700; }
+        .db-status.connected { background: #10b98120; color: #10b981; }
+        .db-status.disconnected { background: #ef444420; color: #ef4444; }
+        .hero-cantinho { background: var(--gradient-cantinho); padding: 6rem 2rem; text-align: center; border-radius: 40px; margin: 3rem auto; max-width: 1400px; border: 4px solid var(--benfica-red); }
+        .hero-title { font-size: 4.5rem; margin-bottom: 1.5rem; background: var(--gradient-benfica); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 900; }
+        .hero-subtitle { font-size: 1.4rem; color: var(--text-warm); max-width: 800px; margin: 0 auto 2.5rem; line-height: 1.7; font-weight: 600; }
+        .hero-badge { display: inline-flex; align-items: center; background: var(--gradient-gold); color: var(--text-dark); padding: 1rem 2rem; border-radius: 30px; font-weight: 800; font-size: 1.1rem; margin-bottom: 2rem; gap: 0.8rem; box-shadow: 0 10px 30px var(--shadow-golden); }
+        .instagram-btn-hero { display: inline-flex; align-items: center; background: linear-gradient(135deg, #833AB4, #FD1D1D, #FCB045); color: white; padding: 1.5rem 3rem; border-radius: 30px; text-decoration: none; font-weight: 800; font-size: 1.2rem; gap: 1rem; transition: all 0.4s ease; box-shadow: 0 15px 40px rgba(131, 58, 180, 0.3); }
+        .instagram-btn-hero:hover { transform: translateY(-5px) scale(1.05); }
+        .main-container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; }
+        .content-layout { display: grid; grid-template-columns: 1fr 400px; gap: 3rem; margin: 4rem 0; }
+        .content-section { background: var(--benfica-white); border-radius: 30px; padding: 3rem; box-shadow: 0 20px 60px var(--shadow-warm); position: relative; }
+        .content-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px; background: var(--gradient-benfica); border-radius: 30px 30px 0 0; }
+        [data-theme="dark"] .content-section { background: var(--cantinho-warm); }
+        .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2.5rem; }
+        .section-header-left { display: flex; align-items: center; gap: 1rem; }
+        .section-icon { width: 50px; height: 50px; background: var(--gradient-benfica); color: white; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 8px 25px var(--shadow-warm); }
+        .section-title { font-size: 2rem; font-weight: 800; background: var(--gradient-benfica); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin: 0; }
+        .posts-grid { display: grid; gap: 2rem; }
+        .post-card { background: var(--cantinho-cream); border-radius: 25px; overflow: hidden; box-shadow: 0 15px 40px var(--shadow-golden); transition: all 0.4s ease; border: 2px solid var(--benfica-gold); opacity: 0; transform: translateY(30px); }
+        .post-card:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 25px 60px var(--shadow-warm); }
+        .post-image { height: 180px; background: var(--gradient-benfica); display: flex; align-items: center; justify-content: center; color: white; font-size: 3.5rem; }
+        .post-content { padding: 2rem; }
+        .post-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-dark); line-height: 1.3; }
+        .post-excerpt { color: var(--text-warm); margin-bottom: 1.5rem; line-height: 1.7; font-size: 1rem; }
+        .post-meta { display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 2px solid var(--benfica-gold); }
+        .post-date { color: var(--benfica-red); font-size: 0.9rem; font-weight: 700; }
+        .post-source { background: var(--gradient-gold); color: var(--text-dark); padding: 0.4rem 1rem; border-radius: 15px; font-size: 0.85rem; font-weight: 700; }
+        .instagram-section { background: linear-gradient(135deg, #833AB4, #FD1D1D, #FCB045); color: white; border-radius: 25px; padding: 2rem; text-align: center; }
+        .instagram-profile { margin-bottom: 1.5rem; }
+        .instagram-avatar { width: 80px; height: 80px; background: rgba(255, 255, 255, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1rem; border: 4px solid rgba(255, 255, 255, 0.3); }
+        .instagram-info h3 { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .follow-btn { background: rgba(255, 255, 255, 0.2); color: white; padding: 1rem 2rem; border-radius: 20px; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 0.8rem; transition: all 0.3s ease; backdrop-filter: blur(10px); }
+        .follow-btn:hover { background: rgba(255, 255, 255, 0.3); transform: translateY(-3px); }
+        .empty-state { text-align: center; padding: 4rem 2rem; color: var(--text-warm); }
+        .empty-state i { font-size: 4rem; margin-bottom: 1.5rem; color: var(--benfica-red); }
+        .empty-state h3 { font-size: 1.8rem; margin-bottom: 1rem; font-weight: 700; }
+        .staff-section { display: none; }
+        .staff-section.active { display: block; animation: fadeInUp 0.5s ease; }
+        .login-form { text-align: center; max-width: 500px; margin: 0 auto; }
+        .login-form h3 { font-size: 2.3rem; margin-bottom: 2rem; color: var(--benfica-red); font-weight: 800; }
+        .login-input { width: 100%; padding: 1.3rem; margin-bottom: 1.3rem; border: 3px solid var(--benfica-gold); border-radius: 20px; background: var(--cantinho-cream); color: var(--text-dark); font-size: 1.05rem; font-family: 'Poppins', sans-serif; font-weight: 600; transition: all 0.3s ease; }
+        .login-input:focus { outline: none; border-color: var(--benfica-red); box-shadow: 0 0 0 4px rgba(220, 20, 60, 0.1); }
+        .login-btn { width: 100%; padding: 1.3rem; background: var(--gradient-benfica); color: white; border: none; border-radius: 20px; font-size: 1.15rem; font-weight: 800; cursor: pointer; transition: all 0.3s ease; font-family: 'Poppins', sans-serif; box-shadow: 0 10px 30px var(--shadow-warm); }
+        .login-btn:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 15px 40px var(--shadow-warm); }
+        .login-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .login-error { color: var(--benfica-red); margin-top: 1rem; display: none; font-weight: 700; animation: shake 0.5s ease; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+        .staff-panel { display: none; }
+        .staff-panel.active { display: block; animation: fadeInUp 0.5s ease; }
+        .add-post-form { background: var(--cantinho-cream); padding: 2.5rem; border-radius: 25px; margin-bottom: 3rem; border: 3px solid var(--benfica-gold); }
+        .form-group { margin-bottom: 1.8rem; }
+        .form-label { display: block; margin-bottom: 0.8rem; font-weight: 700; color: var(--text-dark); font-size: 1.1rem; }
+        .form-input, .form-textarea { width: 100%; padding: 1.1rem 1.3rem; border: 3px solid var(--benfica-gold); border-radius: 15px; background: var(--benfica-white); color: var(--text-dark); font-family: 'Poppins', sans-serif; font-size: 0.95rem; font-weight: 600; transition: all 0.3s ease; }
+        .form-input:focus, .form-textarea:focus { outline: none; border-color: var(--benfica-red); box-shadow: 0 0 0 3px rgba(220, 20, 60, 0.1); }
+        .form-textarea { min-height: 150px; resize: vertical; }
+        .btn-group { display: flex; gap: 1.2rem; flex-wrap: wrap; }
+        .btn-secondary { background: #6b7280; color: white; padding: 1.1rem 1.8rem; border: none; border-radius: 15px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; }
+        .btn-secondary:hover { background: #4b5563; transform: translateY(-2px); }
+        .staff-posts-list { max-height: 600px; overflow-y: auto; }
+        .staff-post-item { background: var(--benfica-white); padding: 2rem; margin-bottom: 1.5rem; border-radius: 20px; border: 2px solid var(--benfica-gold); transition: all 0.3s ease; }
+        .staff-post-item:hover { box-shadow: 0 10px 30px var(--shadow-golden); transform: translateY(-2px); }
+        .delete-btn { background: #ef4444; color: white; border: none; padding: 0.9rem 1.8rem; border-radius: 12px; cursor: pointer; font-weight: 700; margin-top: 1rem; transition: all 0.3s ease; }
+        .delete-btn:hover { background: #dc2626; transform: translateY(-2px); }
+        .footer { background: var(--cantinho-cream); padding: 4rem 0 3rem; text-align: center; margin-top: 6rem; border-top: 4px solid var(--benfica-red); }
+        .footer p { color: var(--text-warm); font-size: 1.1rem; margin-bottom: 0.8rem; font-weight: 600; }
+        .footer a { color: var(--benfica-red); text-decoration: none; font-weight: 800; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); display: none; align-items: center; justify-content: center; z-index: 10000; }
+        .loading-overlay.active { display: flex; }
+        .loading-spinner { width: 60px; height: 60px; border: 5px solid rgba(255, 255, 255, 0.3); border-radius: 50%; border-top-color: var(--benfica-red); animation: spin 1s ease-in-out infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @media (max-width: 1024px) { .content-layout { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { .hero-title { font-size: 3rem; } .nav-menu { gap: 1rem; font-size: 0.95rem; } }
     </style>
 </head>
 <body>
     <div class="benfica-bg"></div>
-    <div class="loading-overlay" id="loading">
-        <div class="loading-spinner"></div>
-    </div>
-    
+    <div class="loading-overlay" id="loading"><div class="loading-spinner"></div></div>
     <nav class="navbar">
         <div class="nav-container">
             <a href="#" class="logo" onclick="showHome()">
@@ -780,21 +129,14 @@
             <ul class="nav-menu">
                 <li><a href="#" class="nav-link" onclick="showHome()">🏠 Cantinho</a></li>
                 <li><a href="#" class="nav-link" onclick="showStaff()">⚙️ Staff</a></li>
-                <li><a href="https://www.instagram.com/info_.benfica" target="_blank" class="nav-link">
-                    <i class="fab fa-instagram"></i> Instagram
-                </a></li>
+                <li><a href="https://www.instagram.com/info_.benfica" target="_blank" class="nav-link"><i class="fab fa-instagram"></i> Instagram</a></li>
             </ul>
             <div class="nav-controls">
-                <div id="db-status" class="db-status disconnected">
-                    <i class="fas fa-circle"></i> Conectando...
-                </div>
-                <button class="control-btn theme-toggle" onclick="toggleTheme()">
-                    <i class="fas fa-moon"></i>
-                </button>
+                <div id="db-status" class="db-status disconnected"><i class="fas fa-circle"></i> Conectando...</div>
+                <button class="control-btn theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
             </div>
         </div>
     </nav>
-
     <main class="main-container">
         <div id="home-section">
             <section class="hero-cantinho">
@@ -802,12 +144,9 @@
                     <div class="hero-badge">🦅 O Cantinho dos Verdadeiros Benfiquistas</div>
                     <h1 class="hero-title">Info Benfica</h1>
                     <p class="hero-subtitle">O teu refúgio benfiquista onde encontras as melhores notícias, análises exclusivas e toda a paixão encarnada num só lugar!</p>
-                    <a href="https://www.instagram.com/info_.benfica" target="_blank" class="instagram-btn-hero">
-                        <i class="fab fa-instagram"></i> Junta-te à Família
-                    </a>
+                    <a href="https://www.instagram.com/info_.benfica" target="_blank" class="instagram-btn-hero"><i class="fab fa-instagram"></i> Junta-te à Família</a>
                 </div>
             </section>
-
             <div class="content-layout">
                 <div class="main-content">
                     <section class="content-section">
@@ -818,28 +157,18 @@
                             </div>
                         </div>
                         <div class="posts-grid" id="posts-grid">
-                            <div class="empty-state">
-                                <i class="fas fa-spinner fa-spin"></i>
-                                <h3>A carregar notícias...</h3>
-                            </div>
+                            <div class="empty-state"><i class="fas fa-spinner fa-spin"></i><h3>A carregar notícias...</h3></div>
                         </div>
                     </section>
                 </div>
-
                 <div class="sidebar-content">
                     <section class="content-section instagram-section">
                         <div class="instagram-profile">
                             <div class="instagram-avatar">📱</div>
-                            <div class="instagram-info">
-                                <h3>@info_.benfica</h3>
-                                <p>Segue-nos no Instagram!</p>
-                            </div>
+                            <div class="instagram-info"><h3>@info_.benfica</h3><p>Segue-nos no Instagram!</p></div>
                         </div>
-                        <a href="https://www.instagram.com/info_.benfica" target="_blank" class="follow-btn">
-                            <i class="fab fa-instagram"></i> Seguir
-                        </a>
+                        <a href="https://www.instagram.com/info_.benfica" target="_blank" class="follow-btn"><i class="fab fa-instagram"></i> Seguir</a>
                     </section>
-
                     <section class="content-section">
                         <div class="section-header">
                             <div class="section-header-left">
@@ -849,261 +178,109 @@
                         </div>
                         <div style="color: var(--text-warm); line-height: 1.7;">
                             <p>Este é o teu espaço benfiquista premium! Aqui encontras conteúdo exclusivo, análises detalhadas e toda a paixão pelo nosso glorioso Benfica.</p>
-                            <div style="margin-top: 1.5rem; padding: 1.3rem; background: var(--cantinho-cream); border-radius: 15px; border-left: 4px solid var(--benfica-red);">
-                                <strong style="color: var(--benfica-red);">🔴 Sempre Benfica!</strong><br>
-                                No coração de todos os verdadeiros benfiquistas
-                            </div>
+                            <div style="margin-top: 1.5rem; padding: 1.3rem; background: var(--cantinho-cream); border-radius: 15px; border-left: 4px solid var(--benfica-red);"><strong style="color: var(--benfica-red);">🔴 Sempre Benfica!</strong><br>No coração de todos os verdadeiros benfiquistas</div>
                         </div>
                     </section>
                 </div>
             </div>
         </div>
-
         <div id="staff-section" class="staff-section">
             <section class="content-section">
                 <div class="section-header">
                     <div class="section-header-left">
                         <div class="section-icon">🔐</div>
-                        <h2 class="section-title">Área Staff Premium</h2>
+                        <h2 class="section-title">Área Staff</h2>
                     </div>
                 </div>
-                
                 <div id="login-form" class="login-form">
                     <h3>🦅 Acesso Exclusivo</h3>
-                    <div style="margin-bottom: 2rem; padding: 1rem; background: var(--cantinho-cream); border-radius: 15px; border: 2px dashed var(--benfica-gold);">
-                        <p style="color: var(--text-warm); margin: 0; font-weight: 600;">
-                            <i class="fas fa-info-circle" style="color: var(--benfica-red);"></i> 
-                            Área restrita para membros da equipa Info Benfica
-                        </p>
-                    </div>
                     <input type="text" id="staff-username" class="login-input" placeholder="Nome de utilizador">
                     <input type="password" id="staff-password" class="login-input" placeholder="Palavra-passe">
-                    <button class="login-btn" onclick="staffLogin()">
-                        <span class="btn-text">🔓 Entrar no Cantinho</span>
-                    </button>
+                    <button class="login-btn" onclick="staffLogin()">🔓 Entrar</button>
                     <div id="login-error" class="login-error">❌ Credenciais incorretas!</div>
                 </div>
-                
                 <div id="staff-panel" class="staff-panel">
-                    <div style="text-align: center; margin-bottom: 2.5rem;">
-                        <h3 style="color: var(--benfica-red); font-size: 1.9rem; margin-bottom: 0.8rem;">
-                            🎉 Bem-vindo ao Painel de Gestão!
-                        </h3>
-                        <p style="color: var(--text-warm); font-size: 1.05rem;">
-                            Aqui podes gerir todo o conteúdo do cantinho benfiquista
-                        </p>
-                    </div>
-
+                    <h3 style="color: var(--benfica-red); font-size: 1.9rem; margin-bottom: 2rem; text-align: center;">🎉 Painel de Gestão</h3>
                     <div class="add-post-form">
-                        <h3 style="color: var(--benfica-red); margin-bottom: 1.8rem; text-align: center;">
-                            ✍️ Adicionar Nova Notícia
-                        </h3>
+                        <h3 style="color: var(--benfica-red); margin-bottom: 1.8rem;">✍️ Nova Notícia</h3>
                         <div class="form-group">
-                            <label class="form-label">📰 Título da Notícia:</label>
-                            <input type="text" id="post-title" class="form-input" placeholder="Ex: Benfica conquista vitória épica!">
+                            <label class="form-label">Título:</label>
+                            <input type="text" id="post-title" class="form-input" placeholder="Título da notícia">
                         </div>
                         <div class="form-group">
-                            <label class="form-label">📝 Conteúdo da Notícia:</label>
-                            <textarea id="post-content" class="form-textarea" placeholder="Escreve aqui todos os detalhes..."></textarea>
+                            <label class="form-label">Conteúdo:</label>
+                            <textarea id="post-content" class="form-textarea" placeholder="Conteúdo da notícia"></textarea>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">🎨 Emoji:</label>
+                            <label class="form-label">Emoji:</label>
                             <input type="text" id="post-emoji" class="form-input" placeholder="⚽" value="⚽">
                         </div>
                         <div class="btn-group">
-                            <button class="login-btn" onclick="addPost()">
-                                <i class="fas fa-paper-plane"></i> Publicar
-                            </button>
-                            <button class="btn-secondary" onclick="staffLogout()">
-                                <i class="fas fa-sign-out-alt"></i> Sair
-                            </button>
+                            <button class="login-btn" onclick="addPost()"><i class="fas fa-paper-plane"></i> Publicar</button>
+                            <button class="btn-secondary" onclick="staffLogout()"><i class="fas fa-sign-out-alt"></i> Sair</button>
                         </div>
                     </div>
-                    
                     <div style="border-top: 3px solid var(--benfica-gold); margin-top: 2.5rem; padding-top: 2.5rem;">
-                        <h3 style="color: var(--benfica-red); margin-bottom: 1.8rem;">
-                            📋 Notícias Publicadas
-                        </h3>
+                        <h3 style="color: var(--benfica-red); margin-bottom: 1.8rem;">📋 Notícias Publicadas</h3>
                         <div id="staff-posts-list" class="staff-posts-list"></div>
                     </div>
                 </div>
             </section>
         </div>
     </main>
-
     <footer class="footer">
-        <div class="footer-content">
-            <p>&copy; 2025 <strong>Info Benfica - O Cantinho Benfiquista</strong></p>
-            <p>Feito com ❤️ para todos os verdadeiros benfiquistas</p>
-            <p>Segue-nos: <a href="https://www.instagram.com/info_.benfica" target="_blank">@info_.benfica</a></p>
-        </div>
+        <p>&copy; 2025 <strong>Info Benfica</strong></p>
+        <p>Feito com ❤️ para os benfiquistas</p>
+        <p><a href="https://www.instagram.com/info_.benfica" target="_blank">@info_.benfica</a></p>
     </footer>
-
     <script>
-        // ========================================
-        // CONFIGURAÇÃO SUPABASE
-        // ========================================
         const SUPABASE_URL = 'https://xqfktdyopxsctogncums.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxZmt0ZHlvcHhzY3RvZ25jdW1zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzc0NTA2OTIsImV4cCI6MjA1MzAyNjY5Mn0.4z_vAHsXvKJ7bKmRCsqzNH-NmEJi3rTp-MFRLAjO8yo';
-
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxZmt0ZHlvcHhzY3RvZ25jdW1zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg3Mjk2MTgsImV4cCI6MjA4NDMwNTYxOH0.AQyxPMZu-Euz3mInoJwC3AwAXsIINhq1FKHD6CXbjuI';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        // Credenciais Staff
-        const STAFF_CREDENTIALS = {
-            username: 'BenficaAdmin',
-            password: 'Cantinho2025!@'
-        };
-
-        let currentTheme = 'light';
+        const STAFF_CREDENTIALS = { username: 'BenficaAdmin', password: 'Cantinho2025!@' };
         let isStaffLoggedIn = false;
 
-        // ========================================
-        // INICIALIZAÇÃO
-        // ========================================
-        document.addEventListener('DOMContentLoaded', async function() {
-            // Testar conexão primeiro
+        document.addEventListener('DOMContentLoaded', async () => {
             await testConnection();
             await loadPosts();
-            
-            setTimeout(() => {
-                showNotification('🦅 Bem-vindo ao cantinho benfiquista!', 'success');
-            }, 800);
         });
 
-        // Testar conexão com Supabase
         async function testConnection() {
             try {
-                const { data, error } = await supabase
-                    .from('posts')
-                    .select('count');
-                
-                if (error) {
-                    console.error('Erro de conexão:', error);
-                    updateDBStatus(false);
-                    
-                    if (error.message.includes('relation "public.posts" does not exist')) {
-                        showNotification('⚠️ Tabela "posts" não existe! Cria a tabela no Supabase.', 'error');
-                    } else {
-                        showNotification('⚠️ Erro: ' + error.message, 'error');
-                    }
-                } else {
-                    updateDBStatus(true);
-                }
-            } catch (err) {
-                console.error('Erro:', err);
-                updateDBStatus(false);
-            }
+                const { data, error } = await supabase.from('posts').select('count');
+                if (error) { console.error('Erro:', error); updateDBStatus(false); }
+                else { updateDBStatus(true); }
+            } catch (err) { console.error('Erro:', err); updateDBStatus(false); }
         }
 
-        // ========================================
-        // CARREGAR POSTS DA BASE DE DADOS
-        // ========================================
         async function loadPosts() {
             showLoading(true);
-            const postsGrid = document.getElementById('posts-grid');
-            
-            postsGrid.innerHTML = `
-                <div class="empty-state">
-                    <i class="fas fa-spinner fa-spin"></i>
-                    <h3>A carregar notícias...</h3>
-                </div>
-            `;
-            
+            const grid = document.getElementById('posts-grid');
+            grid.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><h3>A carregar...</h3></div>';
             try {
-                const { data: posts, error } = await supabase
-                    .from('posts')
-                    .select('*')
-                    .order('created_at', { ascending: false });
-                
-                if (error) {
-                    console.error('Erro ao carregar posts:', error);
-                    
-                    if (error.message.includes('relation "public.posts" does not exist')) {
-                        postsGrid.innerHTML = `
-                            <div class="empty-state">
-                                <i class="fas fa-exclamation-triangle"></i>
-                                <h3>⚠️ Tabela não encontrada!</h3>
-                                <p style="margin-bottom: 1rem;">A tabela "posts" ainda não foi criada no Supabase.</p>
-                                <div style="background: var(--cantinho-cream); padding: 1.5rem; border-radius: 15px; text-align: left; max-width: 600px; margin: 0 auto;">
-                                    <strong style="color: var(--benfica-red);">📋 Como resolver:</strong>
-                                    <ol style="margin-top: 0.8rem; color: var(--text-warm); line-height: 1.8;">
-                                        <li>Vai a <strong>Supabase Dashboard</strong></li>
-                                        <li>Clica em <strong>"SQL Editor"</strong></li>
-                                        <li>Cola e executa este código SQL:</li>
-                                    </ol>
-                                    <pre style="background: white; padding: 1rem; border-radius: 10px; overflow-x: auto; margin-top: 1rem; font-size: 0.85rem;">create table posts (
-  id bigserial primary key,
-  title text not null,
-  content text not null,
-  emoji text default '📰',
-  created_at timestamptz default now()
-);
-
-alter table posts enable row level security;
-
-create policy "Permitir leitura pública"
-  on posts for select using (true);</pre>
-                                    <p style="margin-top: 1rem; color: var(--benfica-red); font-weight: 700;">Depois recarrega esta página!</p>
-                                </div>
-                            </div>
-                        `;
-                        updateDBStatus(false);
-                        showLoading(false);
-                        return;
-                    }
-                    
-                    throw error;
-                }
-                
+                const { data: posts, error } = await supabase.from('posts').select('*').order('created_at', { ascending: false });
+                if (error) throw error;
                 updateDBStatus(true);
-                
                 if (!posts || posts.length === 0) {
-                    postsGrid.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-feather-alt"></i>
-                            <h3>Ainda não há artigos</h3>
-                            <p>Use a área Staff para adicionar as primeiras notícias!</p>
-                        </div>
-                    `;
+                    grid.innerHTML = '<div class="empty-state"><i class="fas fa-feather-alt"></i><h3>Ainda não há artigos</h3><p>Use a área Staff para adicionar!</p></div>';
                     showLoading(false);
                     return;
                 }
-                
-                postsGrid.innerHTML = '';
-                
-                posts.forEach((post, index) => {
+                grid.innerHTML = '';
+                posts.forEach((post, idx) => {
                     const card = createPostCard(post);
-                    postsGrid.appendChild(card);
-                    
-                    setTimeout(() => {
-                        card.style.opacity = '1';
-                        card.style.transform = 'translateY(0)';
-                    }, index * 100);
+                    grid.appendChild(card);
+                    setTimeout(() => { card.style.opacity = '1'; card.style.transform = 'translateY(0)'; }, idx * 100);
                 });
-                
             } catch (error) {
                 console.error('Erro:', error);
-                showNotification('❌ Erro ao carregar: ' + error.message, 'error');
                 updateDBStatus(false);
-                
-                postsGrid.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <h3>Erro de Conexão</h3>
-                        <p style="color: #ef4444; font-weight: 600;">${error.message}</p>
-                        <button onclick="loadPosts()" style="margin-top: 1rem; padding: 0.8rem 1.5rem; background: var(--benfica-red); color: white; border: none; border-radius: 15px; font-weight: 700; cursor: pointer;">
-                            🔄 Tentar Novamente
-                        </button>
-                    </div>
-                `;
+                grid.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Erro ao carregar</h3><button onclick="loadPosts()" style="margin-top:1rem;padding:0.8rem 1.5rem;background:var(--benfica-red);color:white;border:none;border-radius:15px;font-weight:700;cursor:pointer;">🔄 Tentar Novamente</button></div>';
             } finally {
                 showLoading(false);
             }
         }
 
-        // ========================================
-        // CRIAR CARD DE POST
-        // ========================================
         function createPostCard(post) {
             const card = document.createElement('div');
             card.className = 'post-card';
@@ -1121,37 +298,21 @@ create policy "Permitir leitura pública"
             return card;
         }
 
-        // ========================================
-        // ADICIONAR POST
-        // ========================================
         async function addPost() {
             const title = document.getElementById('post-title').value.trim();
             const content = document.getElementById('post-content').value.trim();
             const emoji = document.getElementById('post-emoji').value.trim() || '📰';
-            
-            if (!title || !content) {
-                showNotification('📝 Preenche todos os campos!', 'error');
-                return;
-            }
-            
+            if (!title || !content) { showNotification('📝 Preenche todos os campos!', 'error'); return; }
             showLoading(true);
-            
             try {
-                const { data, error } = await supabase
-                    .from('posts')
-                    .insert([{ title, content, emoji }])
-                    .select();
-                
+                const { error } = await supabase.from('posts').insert([{ title, content, emoji }]);
                 if (error) throw error;
-                
                 document.getElementById('post-title').value = '';
                 document.getElementById('post-content').value = '';
                 document.getElementById('post-emoji').value = '⚽';
-                
                 await loadPosts();
                 await loadStaffPosts();
-                
-                showNotification('🎉 Notícia publicada com sucesso!', 'success');
+                showNotification('🎉 Notícia publicada!', 'success');
             } catch (error) {
                 showNotification('❌ Erro: ' + error.message, 'error');
             } finally {
@@ -1159,25 +320,14 @@ create policy "Permitir leitura pública"
             }
         }
 
-        // ========================================
-        // ELIMINAR POST
-        // ========================================
         async function deletePost(postId) {
-            if (!confirm('🗑️ Tens certeza que desejas eliminar esta notícia?')) return;
-            
+            if (!confirm('🗑️ Eliminar esta notícia?')) return;
             showLoading(true);
-            
             try {
-                const { error } = await supabase
-                    .from('posts')
-                    .delete()
-                    .eq('id', postId);
-                
+                const { error } = await supabase.from('posts').delete().eq('id', postId);
                 if (error) throw error;
-                
                 await loadPosts();
                 await loadStaffPosts();
-                
                 showNotification('🗑️ Notícia eliminada!', 'info');
             } catch (error) {
                 showNotification('❌ Erro: ' + error.message, 'error');
@@ -1186,91 +336,56 @@ create policy "Permitir leitura pública"
             }
         }
 
-        // ========================================
-        // CARREGAR POSTS NO PAINEL STAFF
-        // ========================================
         async function loadStaffPosts() {
-            const staffPostsList = document.getElementById('staff-posts-list');
-            
+            const list = document.getElementById('staff-posts-list');
             try {
-                const { data: posts, error } = await supabase
-                    .from('posts')
-                    .select('*')
-                    .order('created_at', { ascending: false });
-                
-                if (error) throw error;
-                
+                const { data: posts } = await supabase.from('posts').select('*').order('created_at', { ascending: false });
                 if (!posts || posts.length === 0) {
-                    staffPostsList.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-clipboard-list"></i>
-                            <h3>Nenhuma notícia ainda</h3>
-                            <p>Adiciona a primeira notícia acima</p>
-                        </div>
-                    `;
+                    list.innerHTML = '<div class="empty-state"><i class="fas fa-clipboard-list"></i><h3>Nenhuma notícia</h3></div>';
                     return;
                 }
-                
-                staffPostsList.innerHTML = '';
-                
-                posts.forEach(post => {
-                    const postElement = document.createElement('div');
-                    postElement.className = 'staff-post-item';
-                    postElement.innerHTML = `
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
-                            <h4 style="color: var(--benfica-red); margin: 0; font-size: 1.2rem; font-weight: 800;">
-                                ${post.emoji} ${escapeHtml(post.title)}
-                            </h4>
-                            <span style="color: var(--text-warm); font-size: 0.85rem; font-weight: 600;">
-                                ${formatDate(post.created_at)}
-                            </span>
+                list.innerHTML = '';
+                posts.forEach(p => {
+                    const el = document.createElement('div');
+                    el.className = 'staff-post-item';
+                    el.innerHTML = `
+                        <div style="display:flex;justify-content:space-between;margin-bottom:1rem;">
+                            <h4 style="color:var(--benfica-red);margin:0;font-size:1.2rem;font-weight:800;">${p.emoji} ${escapeHtml(p.title)}</h4>
+                            <span style="color:var(--text-warm);font-size:0.85rem;font-weight:600;">${formatDate(p.created_at)}</span>
                         </div>
-                        <p style="color: var(--text-warm); margin: 1rem 0; line-height: 1.6;">
-                            ${escapeHtml(post.content)}
-                        </p>
-                        <button class="delete-btn" onclick="deletePost(${post.id})">
-                            <i class="fas fa-trash"></i> Eliminar
-                        </button>
+                        <p style="color:var(--text-warm);margin:1rem 0;line-height:1.6;">${escapeHtml(p.content)}</p>
+                        <button class="delete-btn" onclick="deletePost(${p.id})"><i class="fas fa-trash"></i> Eliminar</button>
                     `;
-                    staffPostsList.appendChild(postElement);
+                    list.appendChild(el);
                 });
             } catch (error) {
                 console.error('Erro:', error);
             }
         }
 
-        // ========================================
-        // LOGIN STAFF
-        // ========================================
         function staffLogin() {
             const username = document.getElementById('staff-username').value.trim();
             const password = document.getElementById('staff-password').value;
-            const loginBtn = document.querySelector('.login-btn');
-            const btnText = loginBtn.querySelector('.btn-text');
-            
-            btnText.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verificando...';
-            loginBtn.disabled = true;
-            
+            const btn = document.querySelector('.login-btn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verificando...';
+            btn.disabled = true;
             setTimeout(() => {
                 if (username === STAFF_CREDENTIALS.username && password === STAFF_CREDENTIALS.password) {
                     isStaffLoggedIn = true;
                     document.getElementById('login-form').style.display = 'none';
                     document.getElementById('staff-panel').classList.add('active');
                     document.getElementById('login-error').style.display = 'none';
-                    
                     document.getElementById('staff-username').value = '';
                     document.getElementById('staff-password').value = '';
-                    
                     loadStaffPosts();
-                    showNotification('👋 Bem-vindo ao painel!', 'success');
+                    showNotification('👋 Bem-vindo!', 'success');
                 } else {
                     document.getElementById('login-error').style.display = 'block';
                     document.getElementById('staff-password').value = '';
                     showNotification('❌ Acesso negado!', 'error');
                 }
-                
-                btnText.innerHTML = '🔓 Entrar no Cantinho';
-                loginBtn.disabled = false;
+                btn.innerHTML = '🔓 Entrar';
+                btn.disabled = false;
             }, 1200);
         }
 
@@ -1283,10 +398,8 @@ create policy "Permitir leitura pública"
             showNotification('👋 Até breve!', 'info');
         }
 
-        // ========================================
-        // NAVEGAÇÃO
-        // ========================================
         function showHome() {
+            event.preventDefault();
             document.getElementById('home-section').style.display = 'block';
             document.getElementById('staff-section').classList.remove('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1296,7 +409,6 @@ create policy "Permitir leitura pública"
             event.preventDefault();
             document.getElementById('home-section').style.display = 'none';
             document.getElementById('staff-section').classList.add('active');
-            
             if (!isStaffLoggedIn) {
                 document.getElementById('login-form').style.display = 'block';
                 document.getElementById('staff-panel').classList.remove('active');
@@ -1304,33 +416,19 @@ create policy "Permitir leitura pública"
                 document.getElementById('login-form').style.display = 'none';
                 document.getElementById('staff-panel').classList.add('active');
             }
-            
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // ========================================
-        // TEMA
-        // ========================================
         function toggleTheme() {
-            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', currentTheme);
-            
-            const icon = document.querySelector('.theme-toggle i');
-            icon.className = currentTheme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
-            
-            showNotification(
-                currentTheme === 'dark' ? '🌙 Modo escuro' : '☀️ Modo claro', 
-                'info'
-            );
+            const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? '' : 'dark';
+            document.documentElement.setAttribute('data-theme', theme);
+            document.querySelector('.theme-toggle i').className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            showNotification(theme === 'dark' ? '🌙 Modo escuro' : '☀️ Modo claro', 'info');
         }
 
-        // ========================================
-        // UTILITÁRIOS
-        // ========================================
         function formatDate(dateString) {
             const date = new Date(dateString);
-            const options = { day: 'numeric', month: 'long', year: 'numeric' };
-            return date.toLocaleDateString('pt-PT', options);
+            return date.toLocaleDateString('pt-PT', { day: 'numeric', month: 'long', year: 'numeric' });
         }
 
         function escapeHtml(text) {
@@ -1355,56 +453,18 @@ create policy "Permitir leitura pública"
         }
 
         function showNotification(message, type = 'info') {
-            const colors = {
-                success: '#10b981',
-                error: '#ef4444',
-                info: '#3b82f6'
-            };
-            
+            const colors = { success: '#10b981', error: '#ef4444', info: '#3b82f6' };
             const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: ${colors[type]};
-                color: white;
-                padding: 1.2rem 2rem;
-                border-radius: 20px;
-                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-                z-index: 10000;
-                font-weight: 700;
-                font-size: 0.95rem;
-                max-width: 400px;
-                transform: translateX(100%);
-                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            `;
+            notification.style.cssText = `position:fixed;top:20px;right:20px;background:${colors[type]};color:white;padding:1.2rem 2rem;border-radius:20px;box-shadow:0 15px 40px rgba(0,0,0,0.3);z-index:10000;font-weight:700;font-size:0.95rem;max-width:400px;transform:translateX(100%);transition:all 0.4s cubic-bezier(0.4,0,0.2,1);`;
             notification.textContent = message;
-            
             document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.style.transform = 'translateX(0)';
-            }, 100);
-            
+            setTimeout(() => { notification.style.transform = 'translateX(0)'; }, 100);
             setTimeout(() => {
                 notification.style.transform = 'translateX(100%)';
-                setTimeout(() => {
-                    if (notification.parentNode) {
-                        notification.parentNode.removeChild(notification);
-                    }
-                }, 400);
+                setTimeout(() => { if (notification.parentNode) notification.parentNode.removeChild(notification); }, 400);
             }, 3500);
         }
 
-        // Enter key login
-        document.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                const staffSection = document.getElementById('staff-section');
-                if (staffSection.classList.contains('active') && !isStaffLoggedIn) {
-                    staffLogin();
-                }
-            }
+        document.addEventListener('keypress', e => {
+            if (e.key === 'Enter' && document.getElementById('staff-section').classList.contains('active') && !isStaffLoggedIn) staffLogin();
         });
-    </script>
-</body>
-</html>
