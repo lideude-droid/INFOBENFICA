@@ -479,6 +479,21 @@
             font-weight: 700;
         }
 
+        .empty-state pre {
+            text-align: left;
+            font-size: 0.8rem;
+            line-height: 1.5;
+            color: #333;
+        }
+
+        .empty-state ol {
+            padding-left: 1.5rem;
+        }
+
+        .empty-state li {
+            margin-bottom: 0.5rem;
+        }
+
         .staff-section {
             display: none;
         }
@@ -946,12 +961,39 @@
         // INICIALIZAÇÃO
         // ========================================
         document.addEventListener('DOMContentLoaded', async function() {
+            // Testar conexão primeiro
+            await testConnection();
             await loadPosts();
             
             setTimeout(() => {
                 showNotification('🦅 Bem-vindo ao cantinho benfiquista!', 'success');
             }, 800);
         });
+
+        // Testar conexão com Supabase
+        async function testConnection() {
+            try {
+                const { data, error } = await supabase
+                    .from('posts')
+                    .select('count');
+                
+                if (error) {
+                    console.error('Erro de conexão:', error);
+                    updateDBStatus(false);
+                    
+                    if (error.message.includes('relation "public.posts" does not exist')) {
+                        showNotification('⚠️ Tabela "posts" não existe! Cria a tabela no Supabase.', 'error');
+                    } else {
+                        showNotification('⚠️ Erro: ' + error.message, 'error');
+                    }
+                } else {
+                    updateDBStatus(true);
+                }
+            } catch (err) {
+                console.error('Erro:', err);
+                updateDBStatus(false);
+            }
+        }
 
         // ========================================
         // CARREGAR POSTS DA BASE DE DADOS
@@ -960,13 +1002,58 @@
             showLoading(true);
             const postsGrid = document.getElementById('posts-grid');
             
+            postsGrid.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <h3>A carregar notícias...</h3>
+                </div>
+            `;
+            
             try {
                 const { data: posts, error } = await supabase
                     .from('posts')
                     .select('*')
                     .order('created_at', { ascending: false });
                 
-                if (error) throw error;
+                if (error) {
+                    console.error('Erro ao carregar posts:', error);
+                    
+                    if (error.message.includes('relation "public.posts" does not exist')) {
+                        postsGrid.innerHTML = `
+                            <div class="empty-state">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <h3>⚠️ Tabela não encontrada!</h3>
+                                <p style="margin-bottom: 1rem;">A tabela "posts" ainda não foi criada no Supabase.</p>
+                                <div style="background: var(--cantinho-cream); padding: 1.5rem; border-radius: 15px; text-align: left; max-width: 600px; margin: 0 auto;">
+                                    <strong style="color: var(--benfica-red);">📋 Como resolver:</strong>
+                                    <ol style="margin-top: 0.8rem; color: var(--text-warm); line-height: 1.8;">
+                                        <li>Vai a <strong>Supabase Dashboard</strong></li>
+                                        <li>Clica em <strong>"SQL Editor"</strong></li>
+                                        <li>Cola e executa este código SQL:</li>
+                                    </ol>
+                                    <pre style="background: white; padding: 1rem; border-radius: 10px; overflow-x: auto; margin-top: 1rem; font-size: 0.85rem;">create table posts (
+  id bigserial primary key,
+  title text not null,
+  content text not null,
+  emoji text default '📰',
+  created_at timestamptz default now()
+);
+
+alter table posts enable row level security;
+
+create policy "Permitir leitura pública"
+  on posts for select using (true);</pre>
+                                    <p style="margin-top: 1rem; color: var(--benfica-red); font-weight: 700;">Depois recarrega esta página!</p>
+                                </div>
+                            </div>
+                        `;
+                        updateDBStatus(false);
+                        showLoading(false);
+                        return;
+                    }
+                    
+                    throw error;
+                }
                 
                 updateDBStatus(true);
                 
@@ -1003,7 +1090,10 @@
                     <div class="empty-state">
                         <i class="fas fa-exclamation-triangle"></i>
                         <h3>Erro de Conexão</h3>
-                        <p>${error.message}</p>
+                        <p style="color: #ef4444; font-weight: 600;">${error.message}</p>
+                        <button onclick="loadPosts()" style="margin-top: 1rem; padding: 0.8rem 1.5rem; background: var(--benfica-red); color: white; border: none; border-radius: 15px; font-weight: 700; cursor: pointer;">
+                            🔄 Tentar Novamente
+                        </button>
                     </div>
                 `;
             } finally {
@@ -1199,17 +1289,23 @@
         function showHome() {
             document.getElementById('home-section').style.display = 'block';
             document.getElementById('staff-section').classList.remove('active');
-            loadPosts();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function showStaff() {
+            event.preventDefault();
             document.getElementById('home-section').style.display = 'none';
             document.getElementById('staff-section').classList.add('active');
             
             if (!isStaffLoggedIn) {
                 document.getElementById('login-form').style.display = 'block';
                 document.getElementById('staff-panel').classList.remove('active');
+            } else {
+                document.getElementById('login-form').style.display = 'none';
+                document.getElementById('staff-panel').classList.add('active');
             }
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // ========================================
