@@ -20,24 +20,30 @@
 
         :root {
             --red: #DC143C;
+            --dark-red: #B01030;
             --gold: #FFD700;
-            --bg: #FFF5F5;
+            --dark-gold: #E6C200;
+            --bg: linear-gradient(135deg, #FFF5F5 0%, #FFE8EC 100%);
             --text: #1a202c;
+            --shadow: rgba(220, 20, 60, 0.15);
         }
 
         body {
             font-family: 'Poppins', sans-serif;
             background: var(--bg);
             color: var(--text);
+            min-height: 100vh;
         }
 
         .navbar {
-            background: white;
+            background: linear-gradient(135deg, #ffffff 0%, #fffafa 100%);
             border-bottom: 4px solid var(--red);
-            padding: 1rem 2rem;
+            padding: 1.2rem 2rem;
             position: sticky;
             top: 0;
             z-index: 100;
+            box-shadow: 0 4px 20px var(--shadow);
+            backdrop-filter: blur(10px);
         }
 
         .nav-container {
@@ -55,23 +61,36 @@
             font-weight: 900;
             font-size: 1.8rem;
             color: var(--red);
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
         }
 
         .logo-benfica {
-            width: 50px;
-            height: 50px;
-            background: var(--red);
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, var(--red) 0%, var(--dark-red) 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-right: 12px;
             color: white;
+            font-size: 1.8rem;
+            box-shadow: 0 6px 20px rgba(220, 20, 60, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover .logo-benfica {
+            box-shadow: 0 8px 30px rgba(220, 20, 60, 0.6);
+            transform: rotate(5deg);
         }
 
         .nav-menu {
             display: flex;
-            gap: 1.5rem;
+            gap: 2rem;
             list-style: none;
         }
 
@@ -79,10 +98,28 @@
             text-decoration: none;
             font-weight: 700;
             color: var(--text);
+            position: relative;
+            padding: 0.5rem 0;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: var(--red);
+            transition: width 0.3s ease;
         }
 
         .nav-link:hover {
             color: var(--red);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
         }
 
         main {
@@ -93,61 +130,177 @@
 
         .hero {
             text-align: center;
-            padding: 4rem 2rem;
+            padding: 5rem 2rem;
+            background: linear-gradient(135deg, #ffffff 0%, #fff5f7 100%);
             border: 4px solid var(--red);
-            border-radius: 30px;
-            margin-bottom: 3rem;
+            border-radius: 40px;
+            margin-bottom: 4rem;
+            box-shadow: 0 20px 60px var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(220, 20, 60, 0.05) 0%, transparent 70%);
+            animation: pulse 15s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
 
         .hero h1 {
-            font-size: 4rem;
-            color: var(--red);
+            font-size: 4.5rem;
+            background: linear-gradient(135deg, var(--red) 0%, var(--dark-red) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 4px 20px var(--shadow);
+            animation: fadeInDown 0.8s ease;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .hero p {
-            margin-top: 1rem;
-            font-size: 1.2rem;
+            margin-top: 1.5rem;
+            font-size: 1.3rem;
+            position: relative;
+            z-index: 1;
+            color: var(--text);
+            font-weight: 600;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            color: var(--red);
+            margin-bottom: 2rem;
+            text-align: center;
+            font-weight: 900;
         }
 
         .posts-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2.5rem;
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .post-card {
             background: white;
-            border: 2px solid var(--gold);
-            border-radius: 20px;
+            border: 3px solid var(--gold);
+            border-radius: 25px;
             overflow: hidden;
+            box-shadow: 0 10px 40px var(--shadow);
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .post-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent 0%, rgba(220, 20, 60, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .post-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(220, 20, 60, 0.25);
+            border-color: var(--red);
+        }
+
+        .post-card:hover::before {
+            opacity: 1;
         }
 
         .post-image {
-            background: var(--red);
+            background: linear-gradient(135deg, var(--red) 0%, var(--dark-red) 100%);
             color: white;
-            font-size: 3rem;
+            font-size: 4rem;
             text-align: center;
-            padding: 2rem;
+            padding: 3rem;
+            transition: all 0.4s ease;
+        }
+
+        .post-card:hover .post-image {
+            transform: scale(1.1);
         }
 
         .post-content {
-            padding: 1.5rem;
+            padding: 2rem;
         }
 
         .post-title {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             font-weight: 700;
-            margin-bottom: 0.7rem;
+            margin-bottom: 1rem;
+            color: var(--text);
+            line-height: 1.4;
+        }
+
+        .post-text {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #4a5568;
+            margin-bottom: 1rem;
         }
 
         .post-date {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: var(--red);
             font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .post-date::before {
+            content: '📅';
         }
 
         .staff-section {
             display: none;
+            animation: fadeIn 0.5s ease;
         }
 
         .staff-section.active {
@@ -155,41 +308,121 @@
         }
 
         .login-form {
-            max-width: 400px;
+            max-width: 450px;
             margin: auto;
             text-align: center;
+            background: white;
+            padding: 3rem;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px var(--shadow);
+            border: 3px solid var(--gold);
+        }
+
+        .login-form h2 {
+            font-size: 2.5rem;
+            color: var(--red);
+            margin-bottom: 2rem;
+            font-weight: 900;
         }
 
         .login-input {
             width: 100%;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-radius: 12px;
+            padding: 1.2rem;
+            margin-bottom: 1.5rem;
+            border-radius: 15px;
             border: 2px solid var(--gold);
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .login-input:focus {
+            outline: none;
+            border-color: var(--red);
+            box-shadow: 0 0 0 3px rgba(220, 20, 60, 0.1);
         }
 
         .login-btn {
             width: 100%;
-            padding: 1rem;
-            background: var(--red);
+            padding: 1.2rem;
+            background: linear-gradient(135deg, var(--red) 0%, var(--dark-red) 100%);
             color: white;
             border: none;
-            border-radius: 12px;
+            border-radius: 15px;
             font-weight: 700;
+            font-size: 1.1rem;
             cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(220, 20, 60, 0.3);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(220, 20, 60, 0.4);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
         }
 
         .login-error {
             color: var(--red);
             margin-top: 1rem;
             display: none;
+            font-weight: 600;
+            padding: 1rem;
+            background: rgba(220, 20, 60, 0.1);
+            border-radius: 10px;
         }
 
         footer {
             text-align: center;
             padding: 3rem;
             border-top: 4px solid var(--red);
-            margin-top: 4rem;
+            margin-top: 5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #fffafa 100%);
+            box-shadow: 0 -4px 20px var(--shadow);
+        }
+
+        footer p {
+            margin: 0.5rem 0;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        footer p:first-child {
+            font-size: 1.1rem;
+            color: var(--red);
+        }
+
+        .loading {
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--red);
+            font-weight: 600;
+            padding: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .nav-menu {
+                gap: 1rem;
+            }
+
+            .posts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
@@ -218,21 +451,21 @@
     <section id="home-section">
         <div class="hero">
             <h1>Info Benfica</h1>
-            <p>O teu espaço de notícias, opinião e paixão benfiquista.</p>
+            <p>O teu espaço de notícias, opinião e paixão benfiquista 🔴⚪</p>
         </div>
 
         <div id="posts-grid" class="posts-grid">
-            <p>A carregar notícias...</p>
+            <p class="loading">A carregar notícias...</p>
         </div>
     </section>
 
     <section id="staff-section" class="staff-section">
         <div class="login-form">
-            <h2>Área Staff</h2>
+            <h2>Área Staff 🔐</h2>
             <input id="staff-username" class="login-input" placeholder="Utilizador">
             <input id="staff-password" type="password" class="login-input" placeholder="Palavra-passe">
             <button class="login-btn" onclick="staffLogin()">Entrar</button>
-            <div id="login-error" class="login-error">Credenciais incorretas</div>
+            <div id="login-error" class="login-error">❌ Credenciais incorretas</div>
         </div>
     </section>
 
@@ -266,7 +499,7 @@ async function loadPosts() {
 
         grid.innerHTML = '';
         if (!data.length) {
-            grid.innerHTML = '<p>Sem notícias publicadas.</p>';
+            grid.innerHTML = '<p class="loading">📰 Sem notícias publicadas.</p>';
             return;
         }
 
@@ -277,38 +510,40 @@ async function loadPosts() {
                 <div class="post-image">${p.emoji || '📰'}</div>
                 <div class="post-content">
                     <div class="post-title">${escapeHtml(p.title)}</div>
-                    <p>${escapeHtml(p.content)}</p>
+                    <p class="post-text">${escapeHtml(p.content)}</p>
                     <div class="post-date">${formatDate(p.created_at)}</div>
                 </div>`;
             grid.appendChild(card);
         });
     } catch {
-        grid.innerHTML = '<p>Erro ao carregar notícias.</p>';
+        grid.innerHTML = '<p class="loading">⚠️ Erro ao carregar notícias.</p>';
     }
 }
 
 function staffLogin() {
-    const u = staff-username.value.trim();
-    const p = staff-password.value;
+    const u = document.getElementById('staff-username').value.trim();
+    const p = document.getElementById('staff-password').value;
+    const errorDiv = document.getElementById('login-error');
 
     if (u === STAFF.user && p === STAFF.pass) {
         logged = true;
-        alert('Login efetuado');
+        alert('✅ Login efetuado com sucesso!');
+        errorDiv.style.display = 'none';
     } else {
-        login-error.style.display = 'block';
+        errorDiv.style.display = 'block';
     }
 }
 
 function showHome(e) {
     e.preventDefault();
-    home-section.style.display = 'block';
-    staff-section.classList.remove('active');
+    document.getElementById('home-section').style.display = 'block';
+    document.getElementById('staff-section').classList.remove('active');
 }
 
 function showStaff(e) {
     e.preventDefault();
-    home-section.style.display = 'none';
-    staff-section.classList.add('active');
+    document.getElementById('home-section').style.display = 'none';
+    document.getElementById('staff-section').classList.add('active');
 }
 
 function formatDate(d) {
@@ -324,4 +559,3 @@ function escapeHtml(text) {
 
 </body>
 </html>
-
