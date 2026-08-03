@@ -13,13 +13,30 @@ from functools import wraps
 
 import psycopg2
 import psycopg2.extras
-from flask import Flask, request, jsonify, send_from_directory, session, Response
+from flask import Flask, request, jsonify, send_from_directory, session
 from flask_cors import CORS
+from dotenv import load_dotenv
 
 # ─── Logging ──────────────────────────────────────────────────────────────────
 
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
+
+# ─── Carregar .env ────────────────────────────────────────────────────────────
+# 1º tenta o .env local (desenvolvimento na tua máquina)
+# 2º tenta o Secret File do Render, montado em /etc/secrets/.env
+BASE_DIR_ENV = os.path.dirname(os.path.abspath(__file__))
+LOCAL_ENV    = os.path.join(BASE_DIR_ENV, '.env')
+RENDER_ENV   = '/etc/secrets/.env'
+
+if os.path.exists(LOCAL_ENV):
+    load_dotenv(LOCAL_ENV)
+    log.info(".env local carregado")
+elif os.path.exists(RENDER_ENV):
+    load_dotenv(RENDER_ENV)
+    log.info(".env do Render (Secret File) carregado")
+else:
+    log.warning("Nenhum ficheiro .env encontrado — a usar variáveis de ambiente do sistema, se existirem")
 
 # ─── Configuração ─────────────────────────────────────────────────────────────
 
@@ -27,22 +44,9 @@ BASE_DIR     = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_DIR   = os.path.join(BASE_DIR, 'public', 'assets', 'images')
 PUBLIC_DIR   = os.path.join(BASE_DIR, 'public')
 ALLOWED_EXT  = {'png', 'jpg', 'jpeg', 'webp', 'gif'}
-MIME_POR_EXT = {
-    'png':  'image/png',
-    'jpg':  'image/jpeg',
-    'jpeg': 'image/jpeg',
-    'webp': 'image/webp',
-    'gif':  'image/gif',
-}
 MAX_IMG_MB   = 8
 
-# Ligacao a base de dados PostgreSQL (RocketAdmin).
-# Pode ser sobreposta definindo a variavel de ambiente DATABASE_URL no servidor
-# (recomendado em producao); caso contrario usa-se a ligacao abaixo por omissao.
-DATABASE_URL = os.environ.get(
-    'DATABASE_URL',
-    'postgres://hdb_J-pXdeuD:bfNUZhNs0iHHLpUXDaq1gDUNToMD_k2W@hdb-J-pXdeuD.db.rocketadmin.com:5432/hdb_J-pXdeuD'
-)
+DATABASE_URL = os.environ.get('DATABASE_URL', '')
 SECRET_KEY   = os.environ.get('SECRET_KEY', secrets.token_hex(32))
 ADMIN_USER   = os.environ.get('ADMIN_USER', 'infobenfica')
 ADMIN_PASS   = os.environ.get('ADMIN_PASS', 'encarnado1232026')
@@ -94,13 +98,6 @@ def init_db():
             ordem      INTEGER DEFAULT 0
         );
 
-        CREATE TABLE IF NOT EXISTS imagens (
-            id         TEXT PRIMARY KEY,
-            dados      BYTEA NOT NULL,
-            mime       TEXT NOT NULL,
-            criado_em  TEXT NOT NULL
-        );
-
         INSERT INTO categorias (nome)
         VALUES ('Futebol'), ('Modalidades'), ('Mercado'), ('Formação'), ('Opinião')
         ON CONFLICT (nome) DO NOTHING;
@@ -112,21 +109,6 @@ def init_db():
 
 def allowed_file(f):
     return '.' in f and f.rsplit('.', 1)[1].lower() in ALLOWED_EXT
-
-def guardar_imagem_na_db(file_storage):
-    """Lê o ficheiro enviado (PC ou telemóvel) e guarda os bytes na base de dados.
-    Devolve o URL público (/api/imagem/<id>) que serve a imagem diretamente da DB."""
-    ext  = file_storage.filename.rsplit('.', 1)[1].lower()
-    mime = MIME_POR_EXT.get(ext, file_storage.mimetype or 'application/octet-stream')
-    dados = file_storage.read()
-    iid = uuid.uuid4().hex
-    conn = get_db(); cur = conn.cursor()
-    cur.execute(
-        "INSERT INTO imagens (id, dados, mime, criado_em) VALUES (%s,%s,%s,%s)",
-        [iid, psycopg2.Binary(dados), mime, datetime.now().isoformat()]
-    )
-    conn.commit(); cur.close(); conn.close()
-    return f"/api/imagem/{iid}"
 
 # ─── Auth ─────────────────────────────────────────────────────────────────────
 
@@ -168,22 +150,6 @@ def static_js(path):
 @app.route('/assets/<path:path>')
 def static_assets(path):
     return send_from_directory(os.path.join(PUBLIC_DIR, 'assets'), path)
-
-@app.route('/api/imagem/<iid>')
-def api_imagem(iid):
-    """Serve uma imagem guardada como bytes na base de dados."""
-    conn = get_db(); cur = conn.cursor()
-    cur.execute("SELECT dados, mime FROM imagens WHERE id=%s", [iid])
-    row = cur.fetchone()
-    cur.close(); conn.close()
-    if not row:
-        return jsonify({'erro': 'Imagem não encontrada'}), 404
-    dados = row['dados']
-    if isinstance(dados, memoryview):
-        dados = dados.tobytes()
-    resp = Response(bytes(dados), mimetype=row['mime'])
-    resp.headers['Cache-Control'] = 'public, max-age=31536000, immutable'
-    return resp
 
 # ─── API Auth ─────────────────────────────────────────────────────────────────
 
@@ -400,8 +366,10 @@ def admin_upload():
     f = request.files['imagem']
     if not f.filename or not allowed_file(f.filename):
         return jsonify({'erro': 'Tipo não permitido'}), 400
-    url = guardar_imagem_na_db(f)
-    return jsonify({'url': url, 'nome': url.rsplit('/', 1)[-1]})
+    ext = f.filename.rsplit('.', 1)[1].lower()
+    nome = f"{uuid.uuid4().hex}.{ext}"
+    f.save(os.path.join(UPLOAD_DIR, nome))
+    return jsonify({'url': f"/assets/images/{nome}", 'nome': nome})
 
 
 @app.route('/api/admin/noticias/<nid>/galeria', methods=['POST'])
@@ -413,7 +381,10 @@ def admin_galeria_add(nid):
     f = request.files['imagem']
     if not f.filename or not allowed_file(f.filename):
         return jsonify({'erro': 'Tipo não permitido'}), 400
-    url  = guardar_imagem_na_db(f)
+    ext  = f.filename.rsplit('.', 1)[1].lower()
+    nome = f"{uuid.uuid4().hex}.{ext}"
+    f.save(os.path.join(UPLOAD_DIR, nome))
+    url  = f"/assets/images/{nome}"
     conn = get_db(); cur = conn.cursor()
     # Verificar ordem máxima
     cur.execute("SELECT COALESCE(MAX(ordem),0)+1 FROM galeria WHERE noticia_id=%s", [nid])
