@@ -48,8 +48,14 @@ MAX_IMG_MB   = 8
 
 DATABASE_URL = os.environ.get('DATABASE_URL', '')
 SECRET_KEY   = os.environ.get('SECRET_KEY', secrets.token_hex(32))
-ADMIN_USER   = os.environ.get('ADMIN_USER', 'infobenfica')
-ADMIN_PASS   = os.environ.get('ADMIN_PASS', 'encarnado1232026')
+ADMIN_USER   = os.environ.get('ADMIN_USER')
+ADMIN_PASS   = os.environ.get('ADMIN_PASS')
+
+if not ADMIN_USER or not ADMIN_PASS:
+    raise RuntimeError(
+        "ADMIN_USER e ADMIN_PASS têm de estar definidos no .env (local) "
+        "ou nas variáveis de ambiente do Render — não há valores por defeito."
+    )
 
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 

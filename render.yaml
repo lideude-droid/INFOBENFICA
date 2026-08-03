@@ -10,9 +10,9 @@ services:
       - key: SECRET_KEY
         generateValue: true
       - key: ADMIN_USER
-        value: admin
+        sync: false
       - key: ADMIN_PASS
-        value: encarnado2025
+        sync: false
       - key: DEBUG
         value: false
       - key: PYTHON_VERSION
